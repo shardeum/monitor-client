@@ -121,28 +121,28 @@
 <body>
     <div id="app" class="center-container">
         <div class="node-loads-container">
-    <div style="font-weight: bold; padding: 10px; background-color: #e5e7eb;">NODE LOADS</div>
+    <div style="font-weight: bold; padding: 10px; background-color: #e5e7eb;">NODE LOADS (Memory is in MB)</div>
         <div class="table-wrapper">
             <table class="table-auto w-full">
                 <thead>
                     <tr>
                         <th @click="sortTable('ip')">IP</th>
                         <th @click="sortTable('port')">Port</th>
-                        <th @click="sortTable('loadInternal')">Load Internal</th>
-                        <th @click="sortTable('loadExternal')">Load External</th>
-                        <th @click="sortTable('queueLengthAll')">Q Length All</th>
-                        <th @click="sortTable('queueLength')">Q Length</th>
+                        <th @click="sortTable('loadInternal')">Load Int</th>
+                        <th @click="sortTable('loadExternal')">Load Ext</th>
+                        <th @click="sortTable('queueLengthAll')">Q Len All</th>
+                        <th @click="sortTable('queueLength')">Q Len</th>
                         <th @click="sortTable('bucket15')">Q 15</th>
                         <th @click="sortTable('bucket60')">Q 60</th>
                         <th @click="sortTable('bucket120')">Q 120</th>
                         <th @click="sortTable('bucket600')">Q 600</th>
                         <th @click="sortTable('avgQueueTime')">AVG Q Time</th>
                         <th @click="sortTable('maxQueueTime')">Max Q Time</th>
-                        <th @click="sortTable('memoryRss')">Memory RSS (MB)</th>
-                        <th @click="sortTable('memoryHeapTotal')">Memory Heap Total (MB)</th>
-                        <th @click="sortTable('memoryHeapUsed')">Memory Heap Used (MB)</th>
-                        <th @click="sortTable('memoryExternal')">Memory External (MB)</th>
-                        <th @click="sortTable('memoryArrayBuffers')">Memory Array Buffers (MB)</th>
+                        <th @click="sortTable('memoryRss')">Mem RSS</th>
+                        <th @click="sortTable('memoryHeapTotal')">Mem Heap Total</th>
+                        <th @click="sortTable('memoryHeapUsed')">Mem Heap Used</th>
+                        <th @click="sortTable('memoryExternal')">Mem Ext</th>
+                        <th @click="sortTable('memoryArrayBuffers')">Mem Array Buffers</th>
                     </tr>
                 </thead>
                 <tbody class="tbody-wrapper">
@@ -159,11 +159,11 @@
                         <td>{{ node.bucket600 }}</td>
                         <td>{{ node.avgQueueTime }}</td>
                         <td>{{ node.maxQueueTime }}</td>
-                        <td>{{ node.memoryRss/1000000 }}</td>
-                        <td>{{ node.memoryHeapTotal/1000000 }}</td>
-                        <td>{{ node.memoryHeapUsed/1000000 }}</td>
-                        <td>{{ node.memoryExternal/1000000 }}</td>
-                        <td>{{ node.memoryArrayBuffers/1000000 }}</td>
+                        <td>{{ Math.round(node.memoryRss/1000000) }}</td>
+                        <td>{{ Math.round(node.memoryHeapTotal/1000000) }}</td>
+                        <td>{{ Math.round(node.memoryHeapUsed/1000000) }}</td>
+                        <td>{{ Math.round(node.memoryExternal/1000000) }}</td>
+                        <td>{{ Math.round(node.memoryArrayBuffers/1000000) }}</td>
                     </tr>
                 </tbody>
             </table>
