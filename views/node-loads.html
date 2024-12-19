@@ -14,8 +14,6 @@
             background: -webkit-linear-gradient(to right, #cfdef3, #e0eafc);
             background: linear-gradient(to right, #cfdef3, #e0eafc);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
         }
 
         .center-container {
@@ -119,6 +117,7 @@
     </style>
 </head>
 <body>
+    <%- include('shared/navigation.html') %>
     <div id="app" class="center-container">
         <div class="node-loads-container">
     <div style="font-weight: bold; padding: 10px; background-color: #e5e7eb;">NODE LOADS (Memory is in MB)</div>
