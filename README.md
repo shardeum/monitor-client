@@ -27,4 +27,15 @@ great responsibility ;)
 
 4. go to monitor server folder
 
--   npm run start (edited)
+-   npm start
+
+
+## Running tests with puppeteer
+
+Note: for right now it expects the monitor-server to be located at `../monitor-server`, but you can set the `MONITOR_SERVER_PATH` environment variable to the path of your monitor-server.
+
+1. npm run test:e2e 
+
+### Troubleshooting e2e tests
+On Mac OSX you may need to set `PUPPETEER_EXECUTABLE_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"` to avoid system security policies.
+

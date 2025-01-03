@@ -9,6 +9,7 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+  margin: 0;
 }
 
 canvas {
@@ -33,7 +34,6 @@ canvas {
   color: #fff;
   cursor: pointer;
   /* box-shadow: 0px 3px 5px #b3b3b3; */
-  position: absolute;
   width: 100px;
 }
 
@@ -45,16 +45,23 @@ canvas {
 
 #reset-button {
   background: #53b17e;
-  left: 120px;
-  top: 10px;
-  width: 100px;
-  ;
 }
 
 #cycle-counter-container {
   position: absolute;
-  top: 15px;
+  top: 45px;
   left: 250px;
+}
+
+#info-tables-container {
+  position: absolute;
+  top: 95px;
+  right: 50px;
+}
+
+#info-tables-container table {
+  position: relative;
+  margin-right: 0px;
 }
 
 #cycle-counter-container button {
@@ -93,18 +100,6 @@ thead>tr {
   color: #fff;
 }
 
-#transaction-table {
-  top: 200px;
-}
-
-#load-table {
-  top: 300px;
-}
-
-#cycle-info-table {
-  top: 100px;
-}
-
 .tippy-tooltip.tomato-theme {
   background: #5f5f5fcc;
 }
@@ -137,7 +132,7 @@ thead>tr {
 
 .link-container {
   position: absolute;
-  top: 390px;
+  top: 430px;
   right: 50px;
 }
 

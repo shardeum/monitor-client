@@ -12,20 +12,40 @@
         <script src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
         <script src="https://code.createjs.com/1.0.0/tweenjs.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenLite.min.js"></script>
+        <style>
+            .main-content {
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+            }
+            #demoCanvas {
+                flex: 1;
+            }
+            .version-numbers {
+                position: fixed;
+                bottom: 10px;
+                right: 10px;
+                padding: 10px;
+                border-radius: 4px;
+            }
+        </style>
     </head>
 
     <body>
-        <div id="app"></div>
-
-        <canvas id="demoCanvas" width="1500" height="800"></canvas>
-        <div class="link-container">
-            <a target="_blank" href="/history-log?max_history=2880">Node History</a>
-            <a target="_blank" href="/sync">Sync Timeline</a>
-        </div>
-        <div class="version-numbers">
-            <span>Monitor-server version: <span id="server-version">x.x.x</span></span>
-            <br />
-            <span>Monitor-client version: &nbsp;<span id="client-version">x.x.x</span></span>
+        <div class="main-content">
+            <%- include('shared/navigation.html') %>
+            
+            <div id="app"></div>
+            <canvas id="demoCanvas" width="1500" height="800"></canvas>
+            <div class="link-container">
+                <a target="_blank" href="/history-log?max_history=2880">Node History</a>
+                <a target="_blank" href="/sync">Sync Timeline</a>
+            </div> 
+            <div class="version-numbers">
+                <span>Monitor-server version: <span id="server-version">x.x.x</span></span>
+                <br />
+                <span>Monitor-client version: &nbsp;<span id="client-version">x.x.x</span></span>
+            </div>
         </div>
 
         <script src="axios.min.js"></script>
@@ -44,9 +64,7 @@
                 maxStandbyCount: 100,
                 fps,
                 environment: 'production',
-                // environment: 'test',
             })
-            console.log('testing')
         </script>
         <script src="https://unpkg.com/tippy.js@3/dist/tippy.all.min.js"></script>
     </body>

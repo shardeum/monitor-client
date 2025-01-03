@@ -1734,84 +1734,86 @@ const NetworkMonitor = function (config) {
         <a href=""><button id="reset-button">Reset</button></a>
 
         <div id="cycle-counter-container"></div>
-        <table id="node-info-table">
+        <div id="info-tables-container">
+            <table id="node-info-table">
+                <thead>
+                    <tr>
+                        <td>Joining</td>
+                        <td>Standby</td>
+                        <td>Syncing</td>
+                        <td>Active</td>
+                        <td>Total</td>
+                        <td>Desired</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td id="node-info-joining">0</td>
+                        <td id="node-info-standby">0</td>
+                        <td id="node-info-syncing">0</td>
+                        <td id="node-info-active">0</td>
+                        <td id="node-info-total">0</td>
+                        <td id="node-info-desired">0</td>
+                    </tr>
+                </tbody>
+            </table>
+            <table id="cycle-info-table">
             <thead>
                 <tr>
-                    <td>Joining</td>
-                    <td>Standby</td>
-                    <td>Syncing</td>
-                    <td>Active</td>
-                    <td>Total</td>
-                    <td>Desired</td>
+                    <td>Cycle Marker</td>
+                    <td>Total Processed</td>
+                    <td>Cycle Counter</td>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td id="node-info-joining">0</td>
-                    <td id="node-info-standby">0</td>
-                    <td id="node-info-syncing">0</td>
-                    <td id="node-info-active">0</td>
-                    <td id="node-info-total">0</td>
-                    <td id="node-info-desired">0</td>
+                    <td id="current-cyclemarker">-</td>
+                    <td id="total-processed-txs">-</td>
+                    <td id="current-cyclecounter">-</td>
                 </tr>
             </tbody>
-        </table>
-        <table id="cycle-info-table">
-          <thead>
-              <tr>
-                <td>Cycle Marker</td>
-                <td>Total Processed</td>
-                <td>Cycle Counter</td>
-              </tr>
-          </thead>
-          <tbody>
-              <tr>
-                <td id="current-cyclemarker">-</td>
-                <td id="total-processed-txs">-</td>
-                <td id="current-cyclecounter">-</td>
-              </tr>
-          </tbody>
-        </table>
-        <table id="transaction-table">
-          <thead>
-              <tr>
-                  <td>Max Tps</td>
-                  <td>Avg Tps</td>
-                  <td>Rejected Txs</td>
-                  <td>Rejected Tps</td>
-                  <td>Expired Txs</td>
-              </tr>
-          </thead>
-          <tbody>
-              <tr>
-                  <td id="current-maxtps">-</td>
-                  <td id="current-avgtps">-</td>
-                  <td id="total-tx-rejected">-</td>
-                  <td id="current-rejectedtps">-</td>
-                  <td id="total-tx-expired">-</td>
-              </tr>
-          </tbody>
-        </table>
-        <table id="load-table">
-          <thead>
-              <tr>
-                  <td>Net Load</td>
-                  <td>Int Req</td>
-                  <td>Ext Req</td>
-                  <td>Q Length</td>
-                  <td>Q Time</td>
-              </tr>
-          </thead>
-          <tbody>
-              <tr>
-                  <td id="current-load">-</td>
-                  <td id="current-internal-node-load">-</td>
-                  <td id="current-external-node-load">-</td>
-                  <td id="tx-queue-length">-</td>
-                  <td id="tx-queue-time">-</td>
-              </tr>
-          </tbody>
-        </table>
+            </table>
+            <table id="transaction-table">
+            <thead>
+                <tr>
+                    <td>Max Tps</td>
+                    <td>Avg Tps</td>
+                    <td>Rejected Txs</td>
+                    <td>Rejected Tps</td>
+                    <td>Expired Txs</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td id="current-maxtps">-</td>
+                    <td id="current-avgtps">-</td>
+                    <td id="total-tx-rejected">-</td>
+                    <td id="current-rejectedtps">-</td>
+                    <td id="total-tx-expired">-</td>
+                </tr>
+            </tbody>
+            </table>
+            <table id="load-table">
+            <thead>
+                <tr>
+                    <td>Net Load</td>
+                    <td>Int Req</td>
+                    <td>Ext Req</td>
+                    <td>Q Length</td>
+                    <td>Q Time</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td id="current-load">-</td>
+                    <td id="current-internal-node-load">-</td>
+                    <td id="current-external-node-load">-</td>
+                    <td id="tx-queue-length">-</td>
+                    <td id="tx-queue-time">-</td>
+                </tr>
+            </tbody>
+            </table>
+        </div>
         `
 
         const networkCenter = {

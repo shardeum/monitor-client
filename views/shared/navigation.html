@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<div class="navigation-container">
+    <style>
+        .navigation-container {
+            background: #f8f9fa;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .nav-group {
+            position: relative;
+            padding: 0.5rem;
+        }
+        .nav-group-title {
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        .nav-group-title:after {
+            content: "▼";
+            font-size: 0.8em;
+        }
+        .nav-group-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 0.5rem;
+            min-width: 180px;
+            z-index: 100;
+        }
+        .nav-group:hover .nav-group-content {
+            display: flex;
+            flex-direction: column;
+        }
+        .nav-link {
+            color: #0066cc;
+            text-decoration: none;
+            padding: 0.5rem;
+            transition: background-color 0.2s;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+        .nav-link:hover {
+            background-color: #f0f4f8;
+            text-decoration: none;
+        }
+        .nav-link.highlight {
+            font-weight: 500;
+            color: #2c5282;
+        }
+        @media (max-width: 768px) {
+            .nav-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .nav-group {
+                width: 100%;
+            }
+            .nav-group-content {
+                position: static;
+                display: none;
+                box-shadow: none;
+                padding: 0.5rem 0 0.5rem 1rem;
+            }
+            .nav-group:hover .nav-group-content {
+                display: flex;
+            }
+        }
+    </style>
+    <div class="nav-links">
+        <div class="nav-group">
+            <div class="nav-group-title">Main</div>
+            <div class="nav-group-content">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/large-network" class="nav-link highlight">Large Network View</a>
+                <a href="/signin" class="nav-link">Sign In</a>
+            </div>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Logs</div>
+            <div class="nav-group-content">
+                <a href="/log" class="nav-link">Log</a>
+                <a href="/history-log" class="nav-link">Historical Logs</a>
+                <a href="/history" class="nav-link">Node History</a>
+            </div>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Network</div>
+            <div class="nav-group-content">
+                <a href="/node-loads" class="nav-link">Node Loads</a>
+                <a href="/sync-details" class="nav-link">Sync Details</a>
+                <a href="/sync" class="nav-link">Sync Status</a>
+            </div>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Analytics</div>
+            <div class="nav-group-content">
+                <a href="/chart" class="nav-link">Charts</a>
+                <a href="/monitor-events" class="nav-link">Monitor Events</a>
+                <a href="/app-versions" class="nav-link">Application Versions</a>
+                <a href="/summary" class="nav-link">Summary</a>
+            </div>
+        </div>
+    </div>
+</div> 

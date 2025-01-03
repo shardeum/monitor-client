@@ -160,6 +160,7 @@
 </head>
 
 <body>
+    <%- include('shared/navigation.html') %>
     <div id="app">
         <div class="table-container" style="display: flex; gap: 10px; margin: 10px 10px; align-items: flex-start;">
             <table id="montable">
@@ -301,35 +302,6 @@
                 <tr id="itemrow">
                     <td id="monlabel">Q-Time.Tot:</td>
                     <td id="monval">{{ networkStatus.totalQueueTime.toFixed(2) }}</td>
-                </tr>
-            </table>
-            <table id="montable">
-                <tr id="itemrow">
-                    <td id="monheader">LINKS</td>
-                </tr>
-                <tr id="itemrow">
-                    <td><a href="/chart" target="_blank" class="text-sm text-blue-400">Charts</a></td>
-                </tr>
-                <tr id="itemrow">
-                    <td><a href="/sync" target="_blank" class="text-sm text-blue-400">Sync History</a></td>
-                </tr>
-                <tr id="itemrow">
-                    <td><a href="/history" target="_blank" class="text-sm text-blue-400">Node History</a></td>
-                </tr>
-                <tr id="itemrow">
-                    <td><a href="/history-log" target="_blank" class="text-sm text-blue-400">Monitor Logs</a></td>
-                </tr>
-                <tr id="itemrow">
-                    <td><a href="/monitor-events" target="_blank" class="text-sm text-blue-400">Monitor Events</a></td>
-                </tr>
-                <tr id="itemrow">
-                    <td><a href="/app-versions" target="_blank" class="text-sm text-blue-400">App Versions</a></td>
-                </tr>
-                <tr id="itemrow">
-                    <td><a href="/sync-details" target="_blank" class="text-sm text-blue-400">Sync Details</a></td>
-                </tr>
-                <tr id="itemrow">
-                    <td><a href="/node-loads" target="_blank" class="text-sm text-blue-400">Node Loads</a></td>
                 </tr>
             </table>
 
