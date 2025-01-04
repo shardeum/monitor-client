@@ -1,6 +1,6 @@
 {
   "name": "@shardeum-foundation/monitor-client",
-  "version": "2.8.4-prerelease.0",
+  "version": "2.8.4-prerelease.1",
   "description": "",
   "main": "entry.js",
   "engines": {
