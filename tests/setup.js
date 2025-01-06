@@ -13,7 +13,7 @@ async function startMonitorServer() {
     execSync('npm run prepare', { cwd: clientPath })
 
     // Setup monitor-server
-    execSync('npm link @shardus/monitor-client', { cwd: serverPath })
+    execSync('npm link @shardeum-foundation/monitor-client', { cwd: serverPath })
     execSync('npm run prepare', { cwd: serverPath })
 
     // Start server

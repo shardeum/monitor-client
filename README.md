@@ -1,4 +1,4 @@
-# @shardus/monitor-client
+# @shardeum-foundation/monitor-client
 
 ## Releasing
 
@@ -17,7 +17,7 @@ great responsibility ;)
 2. go to the monitor server folder:
 
 -   run npm ci
--   run npm link @shardus/monitor-client
+-   run npm link @shardeum-foundation/monitor-client
 -   run npm run prepare
 
 3. Go to your running (if running) shardeum-server folder
