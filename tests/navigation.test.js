@@ -59,9 +59,9 @@ describe('Monitor Navigation Tests', () => {
       }
     });
 
-    test('should display all navigation groups', async () => {
-      await page.waitForSelector('.nav-group');
-      const groups = await page.$$('.nav-group');
+        test('should display all navigation groups', async () => {
+            await page.waitForSelector('.menu-section')
+            const groups = await page.$$('.menu-section')
       expect(groups.length).toBe(4); // Main, Logs, Network, Analytics
     });
 
@@ -112,11 +112,11 @@ describe('Monitor Navigation Tests', () => {
       }
     });
 
-    test('should display same navigation as homepage', async () => {
-      await page.waitForSelector('.nav-group');
-      const groups = await page.$$('.nav-group');
-      expect(groups.length).toBe(4);
-    });
+        test('should display same navigation as homepage', async () => {
+            await page.waitForSelector('.menu-section')
+            const groups = await page.$$('.menu-section')
+            expect(groups.length).toBe(4)
+        })
 
     test('should maintain existing functionality', async () => {
       // Check if key elements of large network view are present
@@ -154,9 +154,9 @@ describe('Monitor Navigation Tests', () => {
           timeout: 5000
         });
 
-        await page.waitForSelector('.nav-group');
-        const groups = await page.$$('.nav-group');
-        expect(groups.length).toBe(4);
+                await page.waitForSelector('.menu-section')
+                const groups = await page.$$('.menu-section')
+                expect(groups.length).toBe(4)
 
         const links = await page.$$('.nav-link');
         expect(links.length).toBeGreaterThan(0);
