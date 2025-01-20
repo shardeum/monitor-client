@@ -1,35 +1,35 @@
 <!DOCTYPE html>
 <div class="sidebar-container" onmouseenter="toggleSidebar()" onmouseleave="toggleSidebar()">
     <div class="expand-toggle collapsed" id="expandToggle">></div>
-    <div class="side-menu collapsed" id="sideMenu">
+        <div class="side-menu collapsed" id="sideMenu">
         <div class="menu-header">Menu</div>
         <div class="menu-section">
-            <div class="menu-title" onclick="toggleMenuSection(this)">Main</div>
-            <div class="menu-links">
+            <div class="menu-title">Main</div>
+            <div class="menu-links expanded">
                 <a href="/" class="nav-link">Home</a>
                 <a href="/large-network" class="nav-link highlight">Large Network View</a>
                 <a href="/signin" class="nav-link">Sign In</a>
             </div>
         </div>
         <div class="menu-section">
-            <div class="menu-title" onclick="toggleMenuSection(this)">Logs</div>
-            <div class="menu-links">
+            <div class="menu-title">Logs</div>
+            <div class="menu-links expanded">
                 <a href="/log" class="nav-link">Log</a>
                 <a href="/history-log" class="nav-link">Historical Logs</a>
                 <a href="/history" class="nav-link">Node History</a>
             </div>
         </div>
         <div class="menu-section">
-            <div class="menu-title" onclick="toggleMenuSection(this)">Network</div>
-            <div class="menu-links">
+            <div class="menu-title">Network</div>
+            <div class="menu-links expanded">
                 <a href="/node-loads" class="nav-link">Node Loads</a>
                 <a href="/sync-details" class="nav-link">Sync Details</a>
                 <a href="/sync" class="nav-link">Sync Status</a>
             </div>
         </div>
         <div class="menu-section">
-            <div class="menu-title" onclick="toggleMenuSection(this)">Analytics</div>
-            <div class="menu-links">
+            <div class="menu-title">Analytics</div>
+            <div class="menu-links expanded">
                 <a href="/chart" class="nav-link">Charts</a>
                 <a href="/monitor-events" class="nav-link">Monitor Events</a>
                 <a href="/app-versions" class="nav-link">Application Versions</a>
@@ -37,6 +37,7 @@
             </div>
         </div>
     </div>
+
 
     <style>
         .side-menu {
@@ -102,42 +103,39 @@
             margin-top: 1rem;
         }
 
-        .menu-title {
+       .menu-title {
             font-weight: bold;
             color: #444;
-            padding: 0.75rem 1rem;
+            padding: 0.5rem 0.75rem; /* Reduce padding for better spacing */
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            font-size: 1rem; /* Slightly smaller font size */
+            line-height: 1.4;
         }
 
         .menu-title:hover {
             background-color: #f0f4f8;
         }
 
-        .menu-title:after {
-            content: "▼";
-            font-size: 0.8em;
-            transition: transform 0.2s;
-        }
-
-        .menu-title.collapsed:after {
-            transform: rotate(-90deg);
-        }
-
         .menu-links {
-            display: none;
+            display: flex;
             flex-direction: column;
-            padding-left: 1rem;
+            padding-left: 0.75rem; /* Slightly reduce padding for better alignment */
             border-left: 2px solid #f0f4f8;
+            gap: 0.25rem;
         }
 
         .menu-links a {
             text-decoration: none;
             color: #0066cc;
-            padding: 0.5rem 1rem;
+            padding: 0.25rem 0.75rem; 
+            font-size: 0.95rem; 
             display: block;
+            white-space: nowrap; 
+            overflow: hidden;
+            text-overflow: ellipsis;
             transition: background-color 0.2s;
         }
 
@@ -148,6 +146,7 @@
         .menu-links.expanded {
             display: flex;
         }
+
     </style>
 
     <script>
@@ -159,12 +158,6 @@
             expandToggle.classList.toggle('collapsed');
             expandToggle.classList.toggle('expanded');
             expandToggle.textContent = isCollapsed ? '>' : '<';
-        }
-
-        function toggleMenuSection(titleElement) {
-            const links = titleElement.nextElementSibling;
-            titleElement.classList.toggle('collapsed');
-            links.classList.toggle('expanded');
         }
     </script>
 </div>
