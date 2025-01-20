@@ -1,116 +1,35 @@
 <!DOCTYPE html>
-<div class="navigation-container">
-    <style>
-        .navigation-container {
-            background: #f8f9fa;
-            padding: 0.75rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .nav-links {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2rem;
-            justify-content: center;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .nav-group {
-            position: relative;
-            padding: 0.5rem;
-        }
-        .nav-group-title {
-            font-weight: 600;
-            color: #444;
-            margin-bottom: 0.5rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-        .nav-group-title:after {
-            content: "▼";
-            font-size: 0.8em;
-        }
-        .nav-group-content {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background: white;
-            border-radius: 4px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            padding: 0.5rem;
-            min-width: 180px;
-            z-index: 100;
-        }
-        .nav-group:hover .nav-group-content {
-            display: flex;
-            flex-direction: column;
-        }
-        .nav-link {
-            color: #0066cc;
-            text-decoration: none;
-            padding: 0.5rem;
-            transition: background-color 0.2s;
-            border-radius: 4px;
-            white-space: nowrap;
-        }
-        .nav-link:hover {
-            background-color: #f0f4f8;
-            text-decoration: none;
-        }
-        .nav-link.highlight {
-            font-weight: 500;
-            color: #2c5282;
-        }
-        @media (max-width: 768px) {
-            .nav-links {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            .nav-group {
-                width: 100%;
-            }
-            .nav-group-content {
-                position: static;
-                display: none;
-                box-shadow: none;
-                padding: 0.5rem 0 0.5rem 1rem;
-            }
-            .nav-group:hover .nav-group-content {
-                display: flex;
-            }
-        }
-    </style>
-    <div class="nav-links">
-        <div class="nav-group">
-            <div class="nav-group-title">Main</div>
-            <div class="nav-group-content">
+<div class="sidebar-container" onmouseenter="toggleSidebar()" onmouseleave="toggleSidebar()">
+    <div class="expand-toggle collapsed" id="expandToggle">></div>
+    <div class="side-menu collapsed" id="sideMenu">
+        <div class="menu-header">Menu</div>
+        <div class="menu-section">
+            <div class="menu-title" onclick="toggleMenuSection(this)">Main</div>
+            <div class="menu-links">
                 <a href="/" class="nav-link">Home</a>
                 <a href="/large-network" class="nav-link highlight">Large Network View</a>
                 <a href="/signin" class="nav-link">Sign In</a>
             </div>
         </div>
-        <div class="nav-group">
-            <div class="nav-group-title">Logs</div>
-            <div class="nav-group-content">
+        <div class="menu-section">
+            <div class="menu-title" onclick="toggleMenuSection(this)">Logs</div>
+            <div class="menu-links">
                 <a href="/log" class="nav-link">Log</a>
                 <a href="/history-log" class="nav-link">Historical Logs</a>
                 <a href="/history" class="nav-link">Node History</a>
             </div>
         </div>
-        <div class="nav-group">
-            <div class="nav-group-title">Network</div>
-            <div class="nav-group-content">
+        <div class="menu-section">
+            <div class="menu-title" onclick="toggleMenuSection(this)">Network</div>
+            <div class="menu-links">
                 <a href="/node-loads" class="nav-link">Node Loads</a>
                 <a href="/sync-details" class="nav-link">Sync Details</a>
                 <a href="/sync" class="nav-link">Sync Status</a>
             </div>
         </div>
-        <div class="nav-group">
-            <div class="nav-group-title">Analytics</div>
-            <div class="nav-group-content">
+        <div class="menu-section">
+            <div class="menu-title" onclick="toggleMenuSection(this)">Analytics</div>
+            <div class="menu-links">
                 <a href="/chart" class="nav-link">Charts</a>
                 <a href="/monitor-events" class="nav-link">Monitor Events</a>
                 <a href="/app-versions" class="nav-link">Application Versions</a>
@@ -118,4 +37,134 @@
             </div>
         </div>
     </div>
-</div> 
+
+    <style>
+        .side-menu {
+            width: 300px;
+            background-color: #ffffff;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            z-index: 100;
+        }
+
+        .side-menu.collapsed {
+            transform: translateX(-300px);
+        }
+
+        .expand-toggle {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            height: 50px;
+            width: 25px;
+            background-color: #0066cc;
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 101;
+            transition: left 0.3s ease;
+        }
+
+        .expand-toggle.collapsed {
+            left: 0;
+        }
+
+        .expand-toggle.expanded {
+            left: 300px;
+        }
+
+        .expand-toggle::after {
+            content: attr(data-state);
+            display: inline-block;
+        }
+
+        .menu-header {
+            padding: 1rem;
+            font-size: 1.25rem;
+            font-weight: bold;
+            text-align: center;
+            background-color: #0066cc;
+            color: white;
+        }
+
+        .menu-section {
+            margin-top: 1rem;
+        }
+
+        .menu-title {
+            font-weight: bold;
+            color: #444;
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .menu-title:hover {
+            background-color: #f0f4f8;
+        }
+
+        .menu-title:after {
+            content: "▼";
+            font-size: 0.8em;
+            transition: transform 0.2s;
+        }
+
+        .menu-title.collapsed:after {
+            transform: rotate(-90deg);
+        }
+
+        .menu-links {
+            display: none;
+            flex-direction: column;
+            padding-left: 1rem;
+            border-left: 2px solid #f0f4f8;
+        }
+
+        .menu-links a {
+            text-decoration: none;
+            color: #0066cc;
+            padding: 0.5rem 1rem;
+            display: block;
+            transition: background-color 0.2s;
+        }
+
+        .menu-links a:hover {
+            background-color: #f0f4f8;
+        }
+
+        .menu-links.expanded {
+            display: flex;
+        }
+    </style>
+
+    <script>
+        function toggleSidebar() {
+            const sideMenu = document.getElementById('sideMenu');
+            const expandToggle = document.getElementById('expandToggle');
+            const isCollapsed = sideMenu.classList.toggle('collapsed');
+            
+            expandToggle.classList.toggle('collapsed');
+            expandToggle.classList.toggle('expanded');
+            expandToggle.textContent = isCollapsed ? '>' : '<';
+        }
+
+        function toggleMenuSection(titleElement) {
+            const links = titleElement.nextElementSibling;
+            titleElement.classList.toggle('collapsed');
+            links.classList.toggle('expanded');
+        }
+    </script>
+</div>
