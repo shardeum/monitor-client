@@ -1,3 +1,21 @@
+function darkenHexColor(hexColor, magnitude) {
+    // Remove # if present
+    hexColor = hexColor.replace("#", "");
+
+    // Convert hex to RGB
+    const r = parseInt(hexColor.slice(0, 2), 16);
+    const g = parseInt(hexColor.slice(2, 4), 16);
+    const b = parseInt(hexColor.slice(4, 6), 16);
+
+    // Darken each component
+    const newR = Math.max(0, r - magnitude);
+    const newG = Math.max(0, g - magnitude);
+    const newB = Math.max(0, b - magnitude);
+
+    // Convert back to hex
+    return "#" + ((1 << 24) + (newR << 16) + (newG << 8) + newB).toString(16).slice(1);
+}
+
 ; (function main() {
     const G = {}
     loadToken(G)
@@ -236,7 +254,9 @@
                 } else if (this.colorMode === 'nodelist') {
                     color = `#${node.nodelistHash.substr(0, 6)}`
                 }
-                return color
+
+                // Darken the color if this is a foundation node.
+                return node.nodeIsFoundationNode ? darkenHexColor(color, 60) : color;
             },
             onColorModeChange(event) {
                 if (event.target.value === this.colorMode) return
@@ -674,14 +694,18 @@
                 }
             },
 
-            drawCanvasNode({ ctx, x, y, width, height, style, isEoa, indicator }) {
+            drawCanvasNode({ ctx, x, y, width, height, style, isEoa, indicator, currentNode }) {
                 const drawInternalNode = () => {
                     ctx.fillStyle = style.color
                     ctx.strokeStyle = style.borderColor
                     ctx.lineWidth = style.borderWidth
 
                     ctx.beginPath()
-                    ctx.arc(x, y, width / 2, 0, 2 * Math.PI)
+                    if (currentNode && currentNode.nodeIsFoundationNode) {
+                        ctx.rect(x, y, width, width)
+                    } else {
+                        ctx.arc(x, y, width / 2, 0, 2 * Math.PI)
+                    }
                     ctx.stroke()
                     ctx.fill()
                 }
@@ -798,7 +822,7 @@
 
                 return {
                     drawNode: () => {
-                        this.drawCanvasNode({ ctx, x, y, width, height, style, isEoa, indicator })
+                        this.drawCanvasNode({ ctx, x, y, width, height, style, isEoa, indicator, currentNode })
                     },
                     nodeDimensions: { width, height },
                 }
@@ -881,9 +905,23 @@
             },
 
             async start() {
-                let res = await requestWithToken(`${monitorServerUrl}/report`)
+                const results = await Promise.all([
+                    requestWithToken(
+                        `${monitorServerUrl}/report`
+                    ),
+                    requestWithToken(
+                        `${monitorServerUrl}/list-foundation-nodes`
+                    ),
+                ])
+                let res = results[0]
+                const listOfFoundationNodes = results[1].data
                 let newNodesMap = {}
                 let report = res.data
+                const activeNodesIds = Object.keys(report.nodes.active)
+                for (let i = 0; i < activeNodesIds.length; i++) {
+                    const nodeId = activeNodesIds[i]
+                    report.nodes.active[nodeId].nodeIsFoundationNode = listOfFoundationNodes.includes(report.nodes.active[nodeId].nodeIpInfo.externalIp)
+                }
                 this.filterOutCrashedNodes(report)
                 for (let nodeId in report.nodes.active) {
                     // remove if active node exists in the syncing list

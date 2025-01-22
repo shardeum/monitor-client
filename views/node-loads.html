@@ -91,6 +91,10 @@
             text-align: left;
         }
 
+        .foundation-node {
+            background-color: #1ca7dc;
+            color: white;
+        }
 
         /* Specific column widths */
         .node-loads-container th:nth-child(1),
@@ -145,7 +149,7 @@
                     </tr>
                 </thead>
                 <tbody class="tbody-wrapper">
-                    <tr v-for="node in sortedNodes" :key="node.id">
+                    <tr v-for="node in sortedNodes" :key="node.id" :class="node.nodeIsFoundationNode ? 'foundation-node' : ''">
                         <td>{{ node.ip }}</td>
                         <td>{{ node.port }}</td>
                         <td>{{ node.loadInternal }}</td>
@@ -172,5 +176,6 @@
 
     <script src="auth.js" type="text/javascript"></script>
     <script src="node-loads.js"></script>
+    <script src="utils.js" type="text/javascript"></script>
 </body>
 </html>
