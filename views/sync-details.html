@@ -38,11 +38,11 @@
         }
 
         tbody tr:nth-child(odd) {
-            background-color: #f9f9f9; 
+            background-color: #f9f9f9;
         }
 
         tbody tr:nth-child(even) {
-            background-color: #ffffff; 
+            background-color: #ffffff;
         }
 
         /* Content Styles */
@@ -75,6 +75,12 @@
         }
         .label {
             margin-left: 5px;
+        }
+
+        tbody tr:nth-child(even of .foundation-node),
+        tbody tr:nth-child(odd of .foundation-node) {
+            background-color: #1ca7dc; !important;
+            color: white;
         }
 
     </style>
@@ -177,7 +183,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="node in sortedNodes" :key="node.id">
+                    <tr v-for="node in sortedNodes" :key="node.id" :class="node.nodeIsFoundationNode ? 'foundation-node' : ''">
                         <td>{{ node.id.substring(0,4) }}</td>
                         <td>{{ node.ip }}</td>
                         <td>{{ node.port }}</td>

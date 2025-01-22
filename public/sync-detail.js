@@ -165,10 +165,21 @@
                 }
             },
             async fetchChanges() {
-                let res = await requestWithToken(
-                    `${monitorServerUrl}/report?timestamp=${G.lastUpdatedTimestamp}`
-                )
-                return res.data
+                const results = await Promise.all([
+                    requestWithToken(
+                        `${monitorServerUrl}/report?timestamp=${G.lastUpdatedTimestamp}`
+                    ),
+                    requestWithToken(
+                        `${monitorServerUrl}/list-foundation-nodes`
+                    ),
+                ])
+                const listOfFoundationNodes = results[1].data
+                const data =  results[0].data
+                const activeNodesIds = Object.keys(data.nodes.active)
+                for (let i = 0; i < activeNodesIds.length; i++) {
+                    data.nodes.active[activeNodesIds[i]].nodeIsFoundationNode = listOfFoundationNodes.includes(data.nodes.active[activeNodesIds[i]].nodeIpInfo.externalIp)
+                }
+                return data
             },
             changeShouldRefresh() {
                 this.shouldRefresh = !this.shouldRefresh

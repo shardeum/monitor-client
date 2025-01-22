@@ -40,10 +40,22 @@
               }
           },
           async fetchChanges() {
-              let res = await requestWithToken(
-                  `${G.monitorServerUrl}/report?timestamp=${G.lastUpdatedTimestamp}`
-              )
-              return res.data
+              const results = await Promise.all([
+                  requestWithToken(
+                      `${G.monitorServerUrl}/report?timestamp=${G.lastUpdatedTimestamp}`
+                  ),
+                  requestWithToken(
+                      `${G.monitorServerUrl}/list-foundation-nodes`
+                  ),
+              ])
+              const listOfFoundationNodes = results[1].data
+              const data =  results[0].data
+              const activeNodesIds = Object.keys(data.nodes.active)
+              for (let i = 0; i < activeNodesIds.length; i++) {
+                  const nodeId = activeNodesIds[i]
+                  data.nodes.active[nodeId].nodeIsFoundationNode = listOfFoundationNodes.includes(data.nodes.active[nodeId].nodeIpInfo.externalIp)
+              }
+              return data
           },
           updateNetworkStatus(report) {
               this.nodeLoads = []
@@ -68,6 +80,7 @@
                       memoryHeapUsed: node.memory?.heapUsed || 0,
                       memoryExternal: node.memory?.external || 0,
                       memoryArrayBuffers: node.memory?.arrayBuffers || 0,
+                      nodeIsFoundationNode: node.nodeIsFoundationNode
                   })
               }
           },

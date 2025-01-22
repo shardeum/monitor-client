@@ -6,8 +6,15 @@ async function getVersionNumbers() {
     clientVersion = versionResponse.data.clientPackageVersion
     serverVersion = versionResponse.data.serverPackageVersion
 
-    document.getElementById("client-version").textContent = clientVersion
-    document.getElementById("server-version").textContent = serverVersion
+    const clientVersionEle = document.getElementById("client-version")
+    if (clientVersionEle){
+        clientVersionEle.textContent = clientVersion
+    }
+
+    const serverVersionEle = document.getElementById("server-version")
+    if (serverVersionEle){
+        serverVersionEle.textContent = serverVersion
+    }
 }
 
 getVersionNumbers()
