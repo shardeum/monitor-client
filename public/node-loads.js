@@ -80,9 +80,28 @@
                       memoryHeapUsed: node.memory?.heapUsed || 0,
                       memoryExternal: node.memory?.external || 0,
                       memoryArrayBuffers: node.memory?.arrayBuffers || 0,
-                      nodeIsFoundationNode: node.nodeIsFoundationNode
+                      nodeIsFoundationNode: node.nodeIsFoundationNode,
+                      appStartupTimestamp: node.appData.appStartupTimestamp,
+                      activeTimestamp: node.activeTimestamp
                   })
               }
+          },
+          formatMilliseconds(ms) {
+              if (!ms) return "N/A"
+              let seconds = Math.floor(ms / 1000);
+              let minutes = Math.floor(seconds / 60);
+              let hours = Math.floor(minutes / 60);
+
+              seconds = seconds % 60;
+              minutes = minutes % 60;
+
+              // Pad with leading zeros if necessary
+              let formattedTime =
+                  (hours < 10 ? '0' : '') + hours + ':' +
+                  (minutes < 10 ? '0' : '') + minutes + ':' +
+                  (seconds < 10 ? '0' : '') + seconds;
+
+              return formattedTime;
           },
           async updateNodes() {
               try {
