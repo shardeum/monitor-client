@@ -146,6 +146,8 @@
                         <th @click="sortTable('memoryHeapUsed')">Mem Heap Used</th>
                         <th @click="sortTable('memoryExternal')">Mem Ext</th>
                         <th @click="sortTable('memoryArrayBuffers')">Mem Array Buffers</th>
+                        <th @click="sortTable('activeTimestamp')">Time Active</th>
+                        <th @click="sortTable('appStartupTimestamp')">Uptime</th>
                     </tr>
                 </thead>
                 <tbody class="tbody-wrapper">
@@ -167,6 +169,8 @@
                         <td>{{ Math.round(node.memoryHeapUsed/1000000) }}</td>
                         <td>{{ Math.round(node.memoryExternal/1000000) }}</td>
                         <td>{{ Math.round(node.memoryArrayBuffers/1000000) }}</td>
+                        <td>{{ formatMilliseconds(new Date().getTime() - node.activeTimestamp) }}</td>
+                        <td>{{ formatMilliseconds(new Date().getTime() - node.appStartupTimestamp) }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -176,6 +180,5 @@
 
     <script src="auth.js" type="text/javascript"></script>
     <script src="node-loads.js"></script>
-    <script src="utils.js" type="text/javascript"></script>
 </body>
 </html>
