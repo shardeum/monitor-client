@@ -239,6 +239,7 @@
                         cycleFinishedSyncing: node.cycleFinishedSyncing,
                         recentRuntimeSync: result?.radixes.some((r) => r.recentRuntimeSync),
                         fullRadixArray: this.generateFullRadixArray(node),
+                        nodeIsFoundationNode: node.nodeIsFoundationNode,
                     })
                 }
             },
@@ -356,10 +357,22 @@
                 }
             },
             async start() {
-                let res = await requestWithToken(`${monitorServerUrl}/report`)
-                let report = res.data
+                const results = await Promise.all([
+                    requestWithToken(
+                        `${monitorServerUrl}/report`
+                    ),
+                    requestWithToken(
+                        `${monitorServerUrl}/list-foundation-nodes`
+                    ),
+                ])
+                const listOfFoundationNodes = results[1].data
+                const report =  results[0].data
+                const activeNodesIds = Object.keys(report.nodes.active)
+                for (let i = 0; i < activeNodesIds.length; i++) {
+                    report.nodes.active[activeNodesIds[i]].nodeIsFoundationNode = listOfFoundationNodes.includes(report.nodes.active[activeNodesIds[i]].nodeIpInfo.externalIp)
+                }
                 this.filterOutCrashedNodes(report)
-                this.updateNetworkStatus(res.data)
+                this.updateNetworkStatus(report)
 
                 setInterval(this.updateNodes, G.REFRESH_TIME)
             },
