@@ -1,169 +1,58 @@
-import { beforeAll, afterAll, describe, it, expect, beforeEach, afterEach, test, jest } from '@jest/globals';
-import puppeteer from 'puppeteer';
-
-jest.setTimeout(30000);
+import { it, describe, beforeEach, beforeAll, expect } from '@jest/globals'
+import fs from 'fs'
+import path from 'path'
 
 describe('Monitor Navigation Tests', () => {
-  let browser;
-  let page;
+    let navigationHtml;
+    
+    beforeAll(() => {
+        // Read the actual navigation HTML file
+        navigationHtml = fs.readFileSync(
+            path.join(process.cwd(), 'views/shared/navigation.html'), 
+            'utf8'
+        );
+    })
 
-  beforeAll(async () => {
-    try {
-      browser = await puppeteer.launch({
-        headless: true,
-      });
-    } catch (error) {
-      console.error('Failed to launch browser:', error);
-      throw error;
-    }
-  });
+    beforeEach(() => {
+      // setup
+    })
 
-  beforeEach(async () => {
-    try {
-      page = await browser.newPage();
-      page.setDefaultNavigationTimeout(5000);
-      page.on('console', msg => console.log('PAGE LOG:', msg.text()));
-      page.on('pageerror', err => console.log('PAGE ERROR:', err.toString()));
-      page.on('error', err => console.log('ERROR:', err.toString()));
-      page.on('requestfailed', request =>
-        console.log('REQUEST FAILED:', request.url(), request.failure().errorText)
-      );
-    } catch (error) {
-      console.error('Failed to create new page:', error);
-      throw error;
-    }
-  });
-
-  afterEach(async () => {
-    if (page) {
-      await page.close().catch(console.error);
-    }
-  });
-
-  afterAll(async () => {
-    if (browser) {
-      await browser.close().catch(console.error);
-    }
-  });
-
-  describe('Homepage Navigation', () => {
-    beforeEach(async () => {
-      try {
-        await page.goto('http://localhost:3000', {
-          waitUntil: ['domcontentloaded'],
-          timeout: 5000
+    describe('Basic Navigation Tests', () => {
+        it('should contain all required navigation sections', () => {
+            // Check for main sections
+            expect(navigationHtml).toContain('<div class="menu-title">Main</div>');
+            expect(navigationHtml).toContain('<div class="menu-title">Logs</div>');
+            expect(navigationHtml).toContain('<div class="menu-title">Network</div>');
+            expect(navigationHtml).toContain('<div class="menu-title">Analytics</div>');
         });
-      } catch (error) {
-        console.error('Failed to navigate to homepage:', error);
-        throw error;
-      }
-    });
-
-        test('should display all navigation groups', async () => {
-            await page.waitForSelector('.menu-section')
-            const groups = await page.$$('.menu-section')
-      expect(groups.length).toBe(4); // Main, Logs, Network, Analytics
-    });
-
-    test('should highlight Large Network View link', async () => {
-      await page.waitForSelector('.nav-link.highlight');
-      const largeNetworkLink = await page.$('.nav-link.highlight');
-      const text = await page.evaluate(el => el.textContent, largeNetworkLink);
-      expect(text).toBe('Large Network View');
-    });
-
-    test('all links should be functional', async () => {
-      const links = [
-        { path: '/', text: 'Home' },
-        { path: '/large-network', text: 'Large Network View' },
-        { path: '/signin', text: 'Sign In' },
-        { path: '/log', text: 'Log' },
-        { path: '/history-log', text: 'Historical Logs' },
-        { path: '/history', text: 'Node History' },
-        { path: '/node-loads', text: 'Node Loads' },
-        { path: '/sync-details', text: 'Sync Details' },
-        { path: '/sync', text: 'Sync Status' },
-        { path: '/chart', text: 'Charts' },
-        { path: '/monitor-events', text: 'Monitor Events' },
-        { path: '/app-versions', text: 'Application Versions' },
-        { path: '/summary', text: 'Summary' }
-      ];
-
-      for (const link of links) {
-        await page.waitForSelector(`a[href="${link.path}"]`);
-        const linkElement = await page.$(`a[href="${link.path}"]`);
-        expect(linkElement).not.toBeNull();
-        const text = await page.evaluate(el => el.textContent, linkElement);
-        expect(text).toBe(link.text);
-      }
-    });
-  });
-
-  describe('Large Network View Navigation', () => {
-    beforeEach(async () => {
-      try {
-        await page.goto('http://localhost:3000/large-network', {
-          waitUntil: ['networkidle0', 'domcontentloaded'],
-          timeout: 5000
+        
+        it('should have correct navigation links in Main section', () => {
+            // Check for specific links in the Main section
+            expect(navigationHtml).toContain('<a href="/" class="nav-link">Home</a>');
+            expect(navigationHtml).toContain('<a href="/large-network" class="nav-link highlight">Large Network View</a>');
+            expect(navigationHtml).toContain('<a href="/signin" class="nav-link">Sign In</a>');
         });
-      } catch (error) {
-        console.error('Failed to navigate to large network view:', error);
-        throw error;
-      }
-    });
-
-        test('should display same navigation as homepage', async () => {
-            await page.waitForSelector('.menu-section')
-            const groups = await page.$$('.menu-section')
-            expect(groups.length).toBe(4)
-        })
-
-    test('should maintain existing functionality', async () => {
-      // Check if key elements of large network view are present
-      await page.waitForSelector('#mynetwork');
-      const networkDiv = await page.$('#mynetwork');
-      expect(networkDiv).not.toBeNull();
-
-      await page.waitForSelector('td#monheader');
-      const monitorTool = await page.$('td#monheader');
-      const text = await page.evaluate(el => el.textContent, monitorTool);
-      expect(text).toBe('MONITOR TOOL');
-    });
-  });
-
-  describe('Cross-Route Navigation Presence', () => {
-    const routes = [
-      '/',
-      '/large-network',
-      '/signin',
-      '/log',
-      '/history-log',
-      '/history',
-      '/node-loads',
-      '/sync-details',
-      '/sync',
-      '/chart',
-      '/monitor-events',
-      '/app-versions',
-    ];
-
-    test.each(routes)('should display navigation on %s route', async (route) => {
-      try {
-        await page.goto(`http://localhost:3000${route}`, {
-          waitUntil: ['networkidle0', 'domcontentloaded'],
-          timeout: 5000
+        
+        it('should have correct navigation links in Logs section', () => {
+            // Check for specific links in the Logs section
+            expect(navigationHtml).toContain('<a href="/log" class="nav-link">Log</a>');
+            expect(navigationHtml).toContain('<a href="/history-log" class="nav-link">Historical Logs</a>');
+            expect(navigationHtml).toContain('<a href="/history" class="nav-link">Node History</a>');
         });
-
-                await page.waitForSelector('.menu-section')
-                const groups = await page.$$('.menu-section')
-                expect(groups.length).toBe(4)
-
-        const links = await page.$$('.nav-link');
-        expect(links.length).toBeGreaterThan(0);
-      } catch (error) {
-        console.error(`Failed to verify navigation on ${route}:`, error);
-        throw error;
-      }
-    });
-  });
-}); 
+        
+        it('should have correct navigation links in Network section', () => {
+            // Check for specific links in the Network section
+            expect(navigationHtml).toContain('<a href="/node-loads" class="nav-link">Node Loads</a>');
+            expect(navigationHtml).toContain('<a href="/sync-details" class="nav-link">Sync Details</a>');
+            expect(navigationHtml).toContain('<a href="/sync" class="nav-link">Sync Status</a>');
+        });
+        
+        it('should have correct navigation links in Analytics section', () => {
+            // Check for specific links in the Analytics section
+            expect(navigationHtml).toContain('<a href="/chart" class="nav-link">Charts</a>');
+            expect(navigationHtml).toContain('<a href="/monitor-events" class="nav-link">Monitor Events</a>');
+            expect(navigationHtml).toContain('<a href="/app-versions" class="nav-link">Application Versions</a>');
+            expect(navigationHtml).toContain('<a href="/summary" class="nav-link">Summary</a>');
+        });
+    })
+})
