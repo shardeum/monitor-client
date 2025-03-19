@@ -1,7 +1,7 @@
 module.exports = {
-    testEnvironment: 'node',
-    testTimeout: 30000,
-    transform: {
-        '^.+\\.jsx?$': 'babel-jest',
-    },
+  testEnvironment: 'node',
+  testTimeout: 30000,
+  transform: {
+    '^.+\\.jsx?$': 'babel-jest',
+  },
 }
