@@ -3,7 +3,7 @@ new Vue({
     el: '#app',
     data: {
         username: 'admin',
-        password: 'password'
+        password: 'password',
     },
     mounted: function () {
         console.log('mounted')
@@ -14,7 +14,7 @@ new Vue({
             e.preventDefault()
             await this.signIn({
                 username: this.username,
-                password: this.password
+                password: this.password,
             })
         },
         async signIn(payload) {
@@ -22,12 +22,12 @@ new Vue({
             if (res.data && res.data.token) {
                 console.log('SingIn Successful', res.data.token)
                 localStorage.setItem('token', res.data.token)
-                location.href = "/"
+                location.href = '/'
             } else {
                 alert('Incorrect username or password')
                 this.username = ''
                 this.password = ''
             }
-        }
-    }
+        },
+    },
 })

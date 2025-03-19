@@ -1,47 +1,61 @@
 const INTERVAL = 10_000
-const colors = ["#36a2eb", "#ff6384", "#4bc0c0", "#ff9f40", "#9966ff", "#ffcd56", "#c9cbcf"]
+const colors = ['#36a2eb', '#ff6384', '#4bc0c0', '#ff9f40', '#9966ff', '#ffcd56', '#c9cbcf']
 
 const fetchChanges = async (animate = false) => {
     const data = []
     const labels = []
     const tooltips = []
-    const selectedNodeType = nodeTypeSelect.value; // Get the selected node type from the dropdown
+    const selectedNodeType = nodeTypeSelect.value // Get the selected node type from the dropdown
 
     const appDataResponse = await requestWithToken(`${monitorServerUrl}/app-versions`)
     const appDataList = appDataResponse.data
-    for(const appVersion in appDataList) {
-        const activeNodes = appDataList[appVersion].activeNodeCount === undefined || NaN? 0 : appDataList[appVersion].activeNodeCount;
-        const joiningNodes = appDataList[appVersion].joiningNodeCount  === undefined || NaN? 0 : appDataList[appVersion].joiningNodeCount;
-        const syncingNodes = appDataList[appVersion].syncingNodeCount  === undefined || NaN? 0 : appDataList[appVersion].syncingNodeCount;
+    for (const appVersion in appDataList) {
+        const activeNodes =
+            appDataList[appVersion].activeNodeCount === undefined || NaN
+                ? 0
+                : appDataList[appVersion].activeNodeCount
+        const joiningNodes =
+            appDataList[appVersion].joiningNodeCount === undefined || NaN
+                ? 0
+                : appDataList[appVersion].joiningNodeCount
+        const syncingNodes =
+            appDataList[appVersion].syncingNodeCount === undefined || NaN
+                ? 0
+                : appDataList[appVersion].syncingNodeCount
 
-        const count = (activeNodes + joiningNodes) === undefined || NaN? 0 : (activeNodes + joiningNodes);
+        const count =
+            activeNodes + joiningNodes === undefined || NaN ? 0 : activeNodes + joiningNodes
         const nodes = {
             active: activeNodes,
             joining: joiningNodes,
             syncing: syncingNodes,
-            all: count
-        };
+            all: count,
+        }
 
-        data.push(nodes);
+        data.push(nodes)
         labels.push(appVersion)
-        const cliVersions = Object.entries(appDataList[appVersion].cliVersions).map(([version, count]) => `${version}: ${count}`).join("\n");
-        const guiVersions = Object.entries(appDataList[appVersion].guiVersions).map(([version, count]) => `${version}: ${count}`).join("\n");
+        const cliVersions = Object.entries(appDataList[appVersion].cliVersions)
+            .map(([version, count]) => `${version}: ${count}`)
+            .join('\n')
+        const guiVersions = Object.entries(appDataList[appVersion].guiVersions)
+            .map(([version, count]) => `${version}: ${count}`)
+            .join('\n')
         tooltips.push(`cliVersions:\n${cliVersions}\nguiVersions:\n${guiVersions}`)
     }
 
     // Sort three arrays according to 'labels' while maintaining the same order
     const zipped = labels.map((e, i) => [e, data[i], tooltips[i]])
     zipped.sort((a, b) => {
-      const aParts = a[0].split('.').map(Number);
-      const bParts = b[0].split('.').map(Number);
+        const aParts = a[0].split('.').map(Number)
+        const bParts = b[0].split('.').map(Number)
 
-      for (let i = 0; i < aParts.length; i++) {
-        if (bParts[i] - aParts[i] !== 0) {
-          return bParts[i] - aParts[i];
+        for (let i = 0; i < aParts.length; i++) {
+            if (bParts[i] - aParts[i] !== 0) {
+                return bParts[i] - aParts[i]
+            }
         }
-      }
 
-      return 0; // If all parts are equal
+        return 0 // If all parts are equal
     })
     for (let i = 0; i < zipped.length; i++) {
         labels[i] = zipped[i][0]
@@ -69,113 +83,109 @@ const stringToColour = (str) => {
 }
 
 const drawPieChart = (data, labels, tooltips, animate, selectedNodeType) => {
-  let chartStatus = Chart.getChart("app-versions-chart"); // <canvas> id
-  if (chartStatus != undefined) {
-    chartStatus.destroy();
-  }
-
-  const canvas = document.getElementById("app-versions-chart");
-  const ctx = canvas.getContext("2d");
-
-  const chartOptions = {
-    plugins: {
-        tooltip: {
-            callbacks: {
-                afterBody: (context) => {
-                    return tooltips[context[0].dataIndex].split("\n")
-                }
-            }
-
-        }
+    let chartStatus = Chart.getChart('app-versions-chart') // <canvas> id
+    if (chartStatus != undefined) {
+        chartStatus.destroy()
     }
-  }
 
-  if(!animate) {
-    chartOptions.animation = false
-  }
+    const canvas = document.getElementById('app-versions-chart')
+    const ctx = canvas.getContext('2d')
 
+    const chartOptions = {
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    afterBody: (context) => {
+                        return tooltips[context[0].dataIndex].split('\n')
+                    },
+                },
+            },
+        },
+    }
 
-  let graphType = "pie";
-  let datasets;
+    if (!animate) {
+        chartOptions.animation = false
+    }
 
-  if (selectedNodeType === "all") {
-    datasets = [
-      {
-        data: data.map((nodes) => nodes.all),
-        backgroundColor: colors,
-      },
-    ];
-  } else {
-    datasets = [
-      {
-        data: data.map((nodes) => nodes[selectedNodeType]),
-        backgroundColor: colors,
-        label: selectedNodeType,
-      },
-    ];
-  }
+    let graphType = 'pie'
+    let datasets
 
-  // Check if all data values are 0
-  const allZero = datasets.every((dataset) =>
-    dataset.data.every((value) => value === 0)
-  );
+    if (selectedNodeType === 'all') {
+        datasets = [
+            {
+                data: data.map((nodes) => nodes.all),
+                backgroundColor: colors,
+            },
+        ]
+    } else {
+        datasets = [
+            {
+                data: data.map((nodes) => nodes[selectedNodeType]),
+                backgroundColor: colors,
+                label: selectedNodeType,
+            },
+        ]
+    }
 
-  if (allZero) {
-    datasets = [
-      {
-        data: [1], // Add a dummy value to display an empty pie chart
-        backgroundColor: ["#808080"], // Set the color to grey
-        borderWidth: 0, // Remove the border
-        label: "No data available",
-      },
-    ];
-  }
+    // Check if all data values are 0
+    const allZero = datasets.every((dataset) => dataset.data.every((value) => value === 0))
 
-  new Chart(ctx, {
-    type: graphType,
-    data: {
-      datasets: datasets,
-      labels: labels,
-    },
-    options: chartOptions
-  });
+    if (allZero) {
+        datasets = [
+            {
+                data: [1], // Add a dummy value to display an empty pie chart
+                backgroundColor: ['#808080'], // Set the color to grey
+                borderWidth: 0, // Remove the border
+                label: 'No data available',
+            },
+        ]
+    }
+
+    new Chart(ctx, {
+        type: graphType,
+        data: {
+            datasets: datasets,
+            labels: labels,
+        },
+        options: chartOptions,
+    })
 }
 
 const writeInfoPanel = (data, labels, selectedNodeType) => {
-    const infoPanel = document.getElementById("app-versions-info");
-    infoPanel.innerHTML = "";
-    if (selectedNodeType === "all") {
-      const totalAll = data.reduce((total, nodes) => total + nodes.all, 0); // Calculate the total count for all nodes
-      for (let i = 0; i < data.length; i++) {
-        const total = data[i].active + data[i].joining + data[i].syncing;
-        const percentage = totalAll > 0 ? Math.round((total / totalAll) * 100) : 0; // Calculate the percentage for each node version
-        // eslint-disable-next-line no-unsanitized/property
-        infoPanel.innerHTML += `
+    const infoPanel = document.getElementById('app-versions-info')
+    infoPanel.innerHTML = ''
+    if (selectedNodeType === 'all') {
+        const totalAll = data.reduce((total, nodes) => total + nodes.all, 0) // Calculate the total count for all nodes
+        for (let i = 0; i < data.length; i++) {
+            const total = data[i].active + data[i].joining + data[i].syncing
+            const percentage = totalAll > 0 ? Math.round((total / totalAll) * 100) : 0 // Calculate the percentage for each node version
+            // eslint-disable-next-line no-unsanitized/property
+            infoPanel.innerHTML += `
           <div>
             <span style="display: inline-block; width: 12px; height: 12px; background-color: ${colors[i]};"></span>
             <span style="font-weight: bold;">${labels[i]}:</span> ${total} (${percentage}%)
           </div>
-        `;
-      }
+        `
+        }
     } else {
-      const total = data.reduce((total, nodes) => total + nodes[selectedNodeType], 0);
-      for (let i = 0; i < data.length; i++) {
-        const percentage = total > 0 ? Math.round((data[i][selectedNodeType] / total) * 100) : 0;
-        // eslint-disable-next-line no-unsanitized/property
-        infoPanel.innerHTML += `
+        const total = data.reduce((total, nodes) => total + nodes[selectedNodeType], 0)
+        for (let i = 0; i < data.length; i++) {
+            const percentage = total > 0 ? Math.round((data[i][selectedNodeType] / total) * 100) : 0
+            // eslint-disable-next-line no-unsanitized/property
+            infoPanel.innerHTML += `
           <div>
             <span style="display: inline-block; width: 12px; height: 12px; background-color: ${colors[i]};"></span>
             <span style="font-weight: bold;">${labels[i]}:</span> ${data[i][selectedNodeType]} (${percentage}%)
           </div>
-        `;
-      }
+        `
+        }
     }
-  };
+}
 
-const nodeTypeSelect = document.getElementById("node-type");
-nodeTypeSelect.addEventListener("change", () => {
-  fetchChanges(true);
-});
+const nodeTypeSelect = document.getElementById('node-type')
+nodeTypeSelect.addEventListener('change', () => {
+    fetchChanges(true)
+})
 
 fetchChanges(true)
 setInterval(fetchChanges, INTERVAL)

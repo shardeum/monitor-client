@@ -19,8 +19,8 @@ async function requestWithToken(url) {
     let token = loadToken()
     const options = {
         headers: {
-            'Authorization': `${token}`
-        }
+            Authorization: `${token}`,
+        },
     }
     const res = await request.get(url, options)
     return res
@@ -51,8 +51,8 @@ async function checkAuthRequirement() {
         try {
             let response = await request.get(`${monitorServerUrl}/report`, {
                 headers: {
-                    'Authorization': `${token}`
-                }
+                    Authorization: `${token}`,
+                },
             })
             if (response.data) {
                 console.log('Your token is valid')

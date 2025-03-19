@@ -9,7 +9,7 @@ new Vue({
                 joined: {},
                 active: {},
                 removed: {},
-                lost: {}
+                lost: {},
             },
             sortOption: {
                 sortChange: (params) => {
@@ -31,22 +31,22 @@ new Vue({
                         this.sortDir = params.nodeId
                     }
                     this.sortChange(params)
-                }
+                },
             },
             columns: [
-                {field: 'ip', key: 'a', title: 'IP', align: 'left'},
+                { field: 'ip', key: 'a', title: 'IP', align: 'left' },
                 {
                     field: 'port',
                     key: 'b',
                     title: 'Port',
-                    align: 'center'
+                    align: 'center',
                 },
                 {
                     field: 'nodeId',
                     key: 'c',
                     title: 'Node ID',
                     align: 'left',
-                    sortBy: ''
+                    sortBy: '',
                 },
                 {
                     field: 'joined',
@@ -54,11 +54,11 @@ new Vue({
                     title: 'Joined',
                     align: 'center',
                     sortBy: '',
-                    renderBodyCell: ({row, column, rowIndex}, h) => {
+                    renderBodyCell: ({ row, column, rowIndex }, h) => {
                         if (!row.joined) return '-'
                         const time = String(moment(row.joined).format('h:mm:ss a'))
                         return time
-                    }
+                    },
                 },
                 {
                     field: 'active',
@@ -66,11 +66,11 @@ new Vue({
                     title: 'Active',
                     align: 'center',
                     sortBy: '',
-                    renderBodyCell: ({row, column, rowIndex}, h) => {
+                    renderBodyCell: ({ row, column, rowIndex }, h) => {
                         if (!row.active) return '-'
                         const time = String(moment(row.active).format('h:mm:ss a'))
                         return time
-                    }
+                    },
                 },
                 {
                     field: 'heartbeat',
@@ -78,11 +78,11 @@ new Vue({
                     title: 'Last HB',
                     align: 'center',
                     sortBy: '',
-                    renderBodyCell: ({row, column, rowIndex}, h) => {
+                    renderBodyCell: ({ row, column, rowIndex }, h) => {
                         if (!row.heartbeat) return '-'
                         const time = String(moment(row.heartbeat).format('h:mm:ss a'))
                         return time
-                    }
+                    },
                 },
                 {
                     field: 'crashed',
@@ -94,33 +94,31 @@ new Vue({
                         filterList: [
                             {
                                 value: 0,
-                                label: "active",
+                                label: 'active',
                                 selected: false,
                             },
                             {
                                 value: 1,
-                                label: "crashed",
+                                label: 'crashed',
                                 selected: false,
                             },
                             {
                                 value: 2,
-                                label: "syncing",
+                                label: 'syncing',
                                 selected: false,
-                            }
+                            },
                         ],
                         // filter confirm hook
                         filterConfirm: (filterList) => {
-                            const status = filterList
-                                .filter((x) => x.selected)
-                                .map((x) => x.label);
-                            this.searchByNodeStatus(status);
+                            const status = filterList.filter((x) => x.selected).map((x) => x.label)
+                            this.searchByNodeStatus(status)
                         },
                         // filter reset hook
                         filterReset: (filterList) => {
-                            this.searchByNodeStatus([]);
+                            this.searchByNodeStatus([])
                         },
-                    }
-                }
+                    },
+                },
             ],
             eventCustomOption: {
                 bodyRowEvents: ({ row, column, rowIndex }) => {
@@ -128,12 +126,12 @@ new Vue({
                         dblclick: (event) => {
                             const url = `/log?ip=${row.ip}&port=${row.port}`
                             window.open(url, '_blank').focus()
-                        }
-                    };
+                        },
+                    }
                 },
             },
             tableData: [],
-            sourceData: []
+            sourceData: [],
         }
     },
     async mounted() {
@@ -150,7 +148,7 @@ new Vue({
             this.sortChange(sortObj)
         },
         async getTableData() {
-            console.log("getting table data")
+            console.log('getting table data')
             const resp = await request.get(`/api/history`)
             const history = resp.data
             this.sourceData = []
@@ -164,7 +162,7 @@ new Vue({
                     joined: node.joined,
                     heartbeat: node.heartbeat,
                     removed: node.removed,
-                    crashed: node.crashed ? 'crashed' : (node.active ? 'active' : 'syncing')
+                    crashed: node.crashed ? 'crashed' : node.active ? 'active' : 'syncing',
                 }
                 this.sourceData.push(row)
             }
@@ -174,20 +172,24 @@ new Vue({
         },
         sortChange(params) {
             let data = this.sourceData.slice(0)
-            console.log("this.filterBy", this.filterBy)
-            if(this.filterBy === 'crashed') {
-                data = this.sourceData.filter((x) => x.crashed === "crashed")
+            console.log('this.filterBy', this.filterBy)
+            if (this.filterBy === 'crashed') {
+                data = this.sourceData.filter((x) => x.crashed === 'crashed')
             } else if (this.filterBy === 'active') {
-                data = this.sourceData.filter(x => x.crashed === "active")
+                data = this.sourceData.filter((x) => x.crashed === 'active')
             } else if (this.filterBy === 'syncing') {
-                data = this.sourceData.filter(x => !x.active || x.crashed === "syncing")
+                data = this.sourceData.filter((x) => !x.active || x.crashed === 'syncing')
             } else {
                 data = [...this.sourceData]
             }
             data.sort((a, b) => {
                 console.log('this.sortBy', this.sortBy)
                 console.log('this.sortDir', this.sortDir)
-                if (this.sortBy === 'heartbeat' || this.sortBy === 'active' || this.sortBy === 'joined') {
+                if (
+                    this.sortBy === 'heartbeat' ||
+                    this.sortBy === 'active' ||
+                    this.sortBy === 'joined'
+                ) {
                     console.log('sorting by heartbeat', params.heartbeat)
                     if (this.sortDir === 'asc') {
                         return a[this.sortBy] - b[this.sortBy]
@@ -218,7 +220,6 @@ new Vue({
             })
             console.log('sorted data', data)
             this.tableData = [...data]
-        }
-    }
-
+        },
+    },
 })

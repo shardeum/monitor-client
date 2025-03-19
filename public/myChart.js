@@ -27,8 +27,8 @@ new Vue({
             activeCount: [],
             txProcessed: [],
             txRejected: [],
-            count: 0
-        }
+            count: 0,
+        },
     },
     computed: {
         traces() {
@@ -39,7 +39,7 @@ new Vue({
                     type: 'scatter',
                     line: { shape: 'linear' },
                     name: 'Avg TPS',
-                    text: this.tps.map(item => item.toFixed(0)),
+                    text: this.tps.map((item) => item.toFixed(0)),
                     textposition: 'top',
                     mode: 'lines+markers+text',
                     hoverinfo: 'none',
@@ -48,9 +48,9 @@ new Vue({
                         opacity: 0.6,
                         line: {
                             color: 'rgb(8,48,107)',
-                            width: 1.5
-                        }
-                    }
+                            width: 1.5,
+                        },
+                    },
                 },
                 {
                     x: this.xValue,
@@ -58,7 +58,7 @@ new Vue({
                     type: 'scatter',
                     line: { shape: 'linear' },
                     name: 'Active Nodes',
-                    text: this.activeCount.map(item => item.toFixed(0)),
+                    text: this.activeCount.map((item) => item.toFixed(0)),
                     textposition: 'top',
                     mode: 'lines+markers+text',
                     hoverinfo: 'none',
@@ -67,9 +67,9 @@ new Vue({
                         opacity: 0.6,
                         line: {
                             color: '#c1c1c1',
-                            width: 1.5
-                        }
-                    }
+                            width: 1.5,
+                        },
+                    },
                 },
                 {
                     x: this.xValue,
@@ -77,7 +77,7 @@ new Vue({
                     type: 'scatter',
                     line: { shape: 'linear' },
                     name: 'Rejected TPS',
-                    text: this.txRejected.map(item => item.toFixed(0)),
+                    text: this.txRejected.map((item) => item.toFixed(0)),
                     textposition: 'top',
                     mode: 'lines+markers+text',
                     hoverinfo: 'none',
@@ -86,9 +86,9 @@ new Vue({
                         opacity: 0.6,
                         line: {
                             color: '#fc9803',
-                            width: 1.5
-                        }
-                    }
+                            width: 1.5,
+                        },
+                    },
                 },
                 {
                     x: this.xValue,
@@ -97,7 +97,7 @@ new Vue({
                     yaxis: 'y2',
                     line: { shape: 'linear' },
                     name: 'Load',
-                    text: this.loads.map(item => item.toFixed(2)),
+                    text: this.loads.map((item) => item.toFixed(2)),
                     textposition: 'top',
                     mode: 'lines+markers+text',
                     hoverinfo: 'none',
@@ -106,10 +106,9 @@ new Vue({
                         opacity: 0.6,
                         line: {
                             color: 'rgb(255,48,48)',
-                            width: 1.5
-                        }
-                    }
-
+                            width: 1.5,
+                        },
+                    },
                 },
                 {
                     x: this.xValue,
@@ -118,7 +117,7 @@ new Vue({
                     yaxis: 'y2',
                     line: { shape: 'linear' },
                     name: 'Internal Load',
-                    text: this.internalLoad.map(item => item.toFixed(2)),
+                    text: this.internalLoad.map((item) => item.toFixed(2)),
                     textposition: 'top',
                     mode: 'lines+markers+text',
                     hoverinfo: 'none',
@@ -127,10 +126,10 @@ new Vue({
                         opacity: 0.6,
                         line: {
                             color: 'rgb(0, 255, 48)',
-                            width: 1.5
-                        }
-                    }
-                }
+                            width: 1.5,
+                        },
+                    },
+                },
             ]
         },
     },
@@ -153,12 +152,12 @@ new Vue({
                 ticklen: 8,
                 tickwidth: 4,
                 tickcolor: '#000',
-                title: "Cycle Number"
+                title: 'Cycle Number',
             },
             yaxis: {
                 rangemode: 'nonnegative',
                 autorange: true,
-                title: 'TPS (or) Node Count'
+                title: 'TPS (or) Node Count',
             },
             yaxis2: {
                 title: 'Load Ratio',
@@ -167,11 +166,11 @@ new Vue({
                 overlaying: 'y',
                 side: 'right',
                 range: [0, 1],
-                showgrid: false
-            }
-        };
+                showgrid: false,
+            },
+        }
 
-        Plotly.newPlot('myDiv', this.traces, this.layout, { scrollZoom: true });
+        Plotly.newPlot('myDiv', this.traces, this.layout, { scrollZoom: true })
         this.updateChart()
         setInterval(this.updateChart, this.updateInterval)
     },
@@ -185,9 +184,9 @@ new Vue({
             this.collector.txRejected = []
         },
         logCollector() {
-            console.log("collector count", this.collector.count)
-            console.log("collector tps", this.collector.tps.length)
-            console.log("collector loads", this.collector.loads.length)
+            console.log('collector count', this.collector.count)
+            console.log('collector tps', this.collector.tps.length)
+            console.log('collector loads', this.collector.loads.length)
         },
         calcuateAvg(arr) {
             if (arr.length === 0) return 0
@@ -219,7 +218,7 @@ new Vue({
         async getCycleDuration(activeNode) {
             let ip = activeNode.nodeIpInfo.externalIp
             if (ip === 'localhost' || ip === '127.0.0.1') {
-                ip = window.location.href.split('//')[1].split(":")[0]
+                ip = window.location.href.split('//')[1].split(':')[0]
             }
             console.log('ip', ip)
             const response = await requestWithToken(
@@ -254,18 +253,25 @@ new Vue({
                         this.lastCycleStart = response.data.timestamp
                         this.lastxValue = cycleCounter
                         this.currentCounter = cycleCounter
-                    } else if (this.lastCycleStart && this.currentCounter === cycleCounter && response.data.timestamp > this.lastCycleStart) {
-                        let cycleIncrement = (response.data.timestamp - this.lastCycleStart) / (this.cycleDuration * 1000)
+                    } else if (
+                        this.lastCycleStart &&
+                        this.currentCounter === cycleCounter &&
+                        response.data.timestamp > this.lastCycleStart
+                    ) {
+                        let cycleIncrement =
+                            (response.data.timestamp - this.lastCycleStart) /
+                            (this.cycleDuration * 1000)
                         this.lastxValue = this.currentCounter + cycleIncrement
                     } else {
-                        console.log("lastxValue cannot be calculated")
+                        console.log('lastxValue cannot be calculated')
                         return
                     }
 
                     // collected txProcessed
                     if (response.data.totalProcessed > this.currentTotalProcessed) {
                         let increment = response.data.totalProcessed - this.currentTotalProcessed
-                        if (this.currentTotalProcessed !== null) this.collector.txProcessed.push(increment)
+                        if (this.currentTotalProcessed !== null)
+                            this.collector.txProcessed.push(increment)
                         this.currentTotalProcessed = response.data.totalProcessed
                     } else {
                         this.collector.txProcessed.push(0)
@@ -273,12 +279,13 @@ new Vue({
 
                     // collect txRejected
                     if (response.data.totalRejected > this.currentTotalRejected) {
-                        console.log("response.data.totalRejected", response.data.totalRejected)
-                        console.log("currentTotalRejected", this.currentTotalRejected)
+                        console.log('response.data.totalRejected', response.data.totalRejected)
+                        console.log('currentTotalRejected', this.currentTotalRejected)
                         let increment = response.data.totalRejected - this.currentTotalRejected
-                        console.log("increment", increment)
+                        console.log('increment', increment)
                         //if (this.currentTotalRejected !== null) this.collector.txRejected.push(increment)
-                        if (this.currentTotalRejected > 0) this.collector.txRejected.push(increment / 2) // divided by 2s so that results is rejectedTps
+                        if (this.currentTotalRejected > 0)
+                            this.collector.txRejected.push(increment / 2) // divided by 2s so that results is rejectedTps
                         this.currentTotalRejected = response.data.totalRejected
                     } else {
                         this.collector.txRejected.push(0)
@@ -286,17 +293,23 @@ new Vue({
 
                     this.collector.tps.push(response.data.avgTps)
                     let averageLoad = {
-                        networkLoad: loads.map(l => l.networkLoad).reduce((p, c) => p + c, 0) / loads.length,
-                        internal: loads.map(l => l.nodeLoad.internal).reduce((p, c) => p + c, 0) / loads.length,
-                        external: loads.map(l => l.nodeLoad.external).reduce((p, c) => p + c, 0) / loads.length,
+                        networkLoad:
+                            loads.map((l) => l.networkLoad).reduce((p, c) => p + c, 0) /
+                            loads.length,
+                        internal:
+                            loads.map((l) => l.nodeLoad.internal).reduce((p, c) => p + c, 0) /
+                            loads.length,
+                        external:
+                            loads.map((l) => l.nodeLoad.external).reduce((p, c) => p + c, 0) /
+                            loads.length,
                     }
                     this.collector.loads.push(averageLoad.networkLoad)
                     this.collector.internalLoad.push(averageLoad.internal)
                     this.collector.count += 1
                 }
             } catch (e) {
-                console.log("Error while processing the report", e)
+                console.log('Error while processing the report', e)
             }
         },
-    }
+    },
 })

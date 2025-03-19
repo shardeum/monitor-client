@@ -13,7 +13,7 @@ new Vue({
         xBase: [],
         layout: {},
         nodeCount: 0,
-        eventColors: []
+        eventColors: [],
     },
     computed: {
         trace() {
@@ -24,7 +24,7 @@ new Vue({
                 type: 'bar',
                 // width: 0.5,
                 name: 'Sync Duration',
-                text: this.history.map(event => event.name),
+                text: this.history.map((event) => event.name),
                 textposition: 'auto',
                 hoverinfo: 'none',
                 marker: {
@@ -32,12 +32,12 @@ new Vue({
                     opacity: 0.6,
                     line: {
                         color: 'rgb(8,48,107)',
-                        width: 1.5
-                    }
+                        width: 1.5,
+                    },
                 },
-                orientation: 'h'
+                orientation: 'h',
             }
-        }
+        },
     },
     async mounted() {
         const urlParams = new URLSearchParams(window.location.search)
@@ -60,9 +60,9 @@ new Vue({
             // }
             let startLineNumber = oldEventLines.length - maxHistory
             oldEventLines = oldEventLines.slice(startLineNumber + 1)
-            oldEventLines = oldEventLines.filter(line => line.split(" ").length === 9)
+            oldEventLines = oldEventLines.filter((line) => line.split(' ').length === 9)
 
-            let latestCycle = oldEventLines[oldEventLines.length - 1].split(" ")[8]
+            let latestCycle = oldEventLines[oldEventLines.length - 1].split(' ')[8]
 
             let allHistory = []
 
@@ -80,12 +80,12 @@ new Vue({
                     nodeId,
                     ip,
                     port,
-                    cycle
+                    cycle,
                 }
                 allHistory.push(event)
             }
             if (latestCycle > maxHistory) {
-                allHistory = allHistory.filter(event => event.cycle > latestCycle - maxHistory)
+                allHistory = allHistory.filter((event) => event.cycle > latestCycle - maxHistory)
             }
             this.history = [...allHistory]
             this.history = this.history.sort((a, b) => a.cycle - b.cycle)
@@ -105,7 +105,7 @@ new Vue({
                 nodeId,
                 ip,
                 port,
-                cycle
+                cycle,
             }
             if (this.validateIPV4(ip) === false) return
             this.history.push(event)
@@ -127,11 +127,11 @@ new Vue({
                 tickcolor: '#000',
             },
             yaxis: {
-                automargin: true
-            }
-        };
+                automargin: true,
+            },
+        }
 
-        Plotly.newPlot('myDiv', data, this.layout, { scrollZoom: true });
+        Plotly.newPlot('myDiv', data, this.layout, { scrollZoom: true })
         this.updateChart()
         // setInterval(this.updateChart, 5000)
     },
@@ -158,23 +158,23 @@ new Vue({
             }
         },
         async getReport() {
-            console.log(this.history.map(event => event.ip + "__" + event.port))
-            this.yValue = this.history.map(event => {
+            console.log(this.history.map((event) => event.ip + '__' + event.port))
+            this.yValue = this.history.map((event) => {
                 return `${event.ip}:${event.port}`
             })
-            this.xBase = this.history.map(event => {
+            this.xBase = this.history.map((event) => {
                 return event.cycle
             })
-            this.xIncrement = this.history.map(event => {
+            this.xIncrement = this.history.map((event) => {
                 return event.cycle + 1 - event.cycle
             })
-            this.eventColors = this.history.map(event => {
+            this.eventColors = this.history.map((event) => {
                 if (event.name === 'active') return '#00ff00'
                 else if (event.name === 'joined') return '#ffd480'
                 else if (event.name === 'removed') return '#00ffff'
                 else if (event.name === 'dead') return '#ff0000'
             })
             return true
-        }
-    }
+        },
+    },
 })

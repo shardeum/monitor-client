@@ -549,34 +549,37 @@ const NetworkMonitor = function (config) {
 
             if (!txs || txs === 0) continue
             injected += txs
-            const injectInterval = setInterval(() => {
-                const newTx = createNewTx()
-                let injectedTx = createNewTxCircle(newTx, node)
+            const injectInterval = setInterval(
+                () => {
+                    const newTx = createNewTx()
+                    let injectedTx = createNewTxCircle(newTx, node)
 
-                transformCircle(
-                    injectedTx.circle,
-                    node.currentPosition.x,
-                    node.currentPosition.y,
-                    null,
-                    G.txAnimationSpeed
-                )
+                    transformCircle(
+                        injectedTx.circle,
+                        node.currentPosition.x,
+                        node.currentPosition.y,
+                        null,
+                        G.txAnimationSpeed
+                    )
 
-                setTimeout(() => {
-                    injectedTx.currentPosition = node.currentPosition
-                    const randomNodes = getRandomActiveNodes(G.nodeToForward, node)
-                    for (let i = 0; i < randomNodes.length; i += 1) {
-                        const clonedTx = G.generatedTxArray[nodeId][i]
-                        clonedTx.data = injectedTx.data
-                        forwardInjectedTx(clonedTx, randomNodes[i], node)
-                    }
+                    setTimeout(() => {
+                        injectedTx.currentPosition = node.currentPosition
+                        const randomNodes = getRandomActiveNodes(G.nodeToForward, node)
+                        for (let i = 0; i < randomNodes.length; i += 1) {
+                            const clonedTx = G.generatedTxArray[nodeId][i]
+                            clonedTx.data = injectedTx.data
+                            forwardInjectedTx(clonedTx, randomNodes[i], node)
+                        }
 
-                    injectedTx.circle.graphics.clear()
-                    stage.removeChild(injectedTx.circle)
-                    injectedTx = null
-                }, G.txAnimationSpeed)
-                animatedInjection += 1
-                if (animatedInjection >= txs) clearInterval(injectInterval)
-            }, Math.floor(interval / txs))
+                        injectedTx.circle.graphics.clear()
+                        stage.removeChild(injectedTx.circle)
+                        injectedTx = null
+                    }, G.txAnimationSpeed)
+                    animatedInjection += 1
+                    if (animatedInjection >= txs) clearInterval(injectInterval)
+                },
+                Math.floor(interval / txs)
+            )
         }
         return injected
     }

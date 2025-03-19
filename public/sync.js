@@ -1,4 +1,3 @@
-
 function initSyncChart() {
     new Vue({
         el: '#app',
@@ -7,7 +6,7 @@ function initSyncChart() {
             xIncrement: [],
             xBase: [],
             layout: {},
-            nodeCount: 0
+            nodeCount: 0,
         },
         computed: {
             trace() {
@@ -26,12 +25,12 @@ function initSyncChart() {
                         opacity: 0.6,
                         line: {
                             color: 'rgb(8,48,107)',
-                            width: 1.5
-                        }
+                            width: 1.5,
+                        },
                     },
-                    orientation: 'h'
+                    orientation: 'h',
                 }
-            }
+            },
         },
         mounted: function () {
             console.log('Sync page loaded!')
@@ -48,9 +47,9 @@ function initSyncChart() {
                     tickwidth: 4,
                     tickcolor: '#000',
                 },
-            };
+            }
 
-            Plotly.newPlot('myDiv', data, this.layout, { scrollZoom: true });
+            Plotly.newPlot('myDiv', data, this.layout, { scrollZoom: true })
             this.updateChart()
             setInterval(this.updateChart, 5000)
         },
@@ -74,20 +73,22 @@ function initSyncChart() {
                 else this.nodeCount = Object.keys(report).length
 
                 let newLables = Object.keys(report)
-                this.yValue = newLables.map(nodeId => {
-                    let node = heartbeatResponse.data.nodes.syncing[nodeId] || heartbeatResponse.data.nodes.active[nodeId]
+                this.yValue = newLables.map((nodeId) => {
+                    let node =
+                        heartbeatResponse.data.nodes.syncing[nodeId] ||
+                        heartbeatResponse.data.nodes.active[nodeId]
                     if (node) return `${node.nodeIpInfo.externalIp}:${node.nodeIpInfo.externalPort}`
                     else return nodeId
                 })
-                this.xBase = Object.values(report).map(r => {
+                this.xBase = Object.values(report).map((r) => {
                     return r.cycleStarted
                 })
-                this.xIncrement = Object.values(report).map(r => {
+                this.xIncrement = Object.values(report).map((r) => {
                     return r.cycleEnded - r.cycleStarted
                 })
                 return true
-            }
-        }
+            },
+        },
     })
 }
 initSyncChart()

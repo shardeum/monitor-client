@@ -1,22 +1,22 @@
 function darkenHexColor(hexColor, magnitude) {
     // Remove # if present
-    hexColor = hexColor.replace("#", "");
+    hexColor = hexColor.replace('#', '')
 
     // Convert hex to RGB
-    const r = parseInt(hexColor.slice(0, 2), 16);
-    const g = parseInt(hexColor.slice(2, 4), 16);
-    const b = parseInt(hexColor.slice(4, 6), 16);
+    const r = parseInt(hexColor.slice(0, 2), 16)
+    const g = parseInt(hexColor.slice(2, 4), 16)
+    const b = parseInt(hexColor.slice(4, 6), 16)
 
     // Darken each component
-    const newR = Math.max(0, r - magnitude);
-    const newG = Math.max(0, g - magnitude);
-    const newB = Math.max(0, b - magnitude);
+    const newR = Math.max(0, r - magnitude)
+    const newG = Math.max(0, g - magnitude)
+    const newB = Math.max(0, b - magnitude)
 
     // Convert back to hex
-    return "#" + ((1 << 24) + (newR << 16) + (newG << 8) + newB).toString(16).slice(1);
+    return '#' + ((1 << 24) + (newR << 16) + (newG << 8) + newB).toString(16).slice(1)
 }
 
-; (function main() {
+;(function main() {
     const G = {}
     loadToken(G)
     G.VW = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
@@ -75,7 +75,7 @@ function darkenHexColor(hexColor, magnitude) {
                 oosSummary: {
                     E: { count: 0, nodes: 0 },
                     CE: { count: 0, nodes: 0 },
-                    C: { count: 0, nodes: 0 }
+                    C: { count: 0, nodes: 0 },
                 },
                 isRecentActiveCycles: 4,
                 recentRuntimeSyncMap: new Map(),
@@ -98,7 +98,7 @@ function darkenHexColor(hexColor, magnitude) {
         watch: {
             oosFilter() {
                 this.refreshNodeColors()
-            }
+            },
         },
         methods: {
             calculateNetworkPosition(nodeId) {
@@ -215,21 +215,21 @@ function darkenHexColor(hexColor, magnitude) {
                             // if smart-c, only consider radixes in consensus range
                             // if smart-any, consider all radixes
                             const recentOOS = nodeRadixes
-                                .filter(radix => {
+                                .filter((radix) => {
                                     if (this.oosFilter === 'smart-c') {
-                                        return radix.inConsensusRange; // Only C and CE for 'smart-c'
+                                        return radix.inConsensusRange // Only C and CE for 'smart-c'
                                     }
-                                    return true; // All radixes for 'smart-any'
+                                    return true // All radixes for 'smart-any'
                                 })
-                                .map(radix => {
+                                .map((radix) => {
                                     const uniqueKey = `${node.nodeId}-${radix.radix}`
                                     return this.recentRuntimeSyncMap.get(uniqueKey) || 0
                                 })
-                
-                            if (recentOOS.some(oosCycle => oosCycle > 0)) {
-                                const mostRecentOOS = Math.max(...recentOOS);
-                                const cyclesSinceOOS = this.networkStatus.counter - mostRecentOOS;
-                                
+
+                            if (recentOOS.some((oosCycle) => oosCycle > 0)) {
+                                const mostRecentOOS = Math.max(...recentOOS)
+                                const cyclesSinceOOS = this.networkStatus.counter - mostRecentOOS
+
                                 if (cyclesSinceOOS <= 1) {
                                     color = '#00FFFF' // Bright cyan for very recent OOS (0-1 cycles ago)
                                 } else if (cyclesSinceOOS <= 2) {
@@ -256,7 +256,7 @@ function darkenHexColor(hexColor, magnitude) {
                 }
 
                 // Darken the color if this is a foundation node.
-                return node.nodeIsFoundationNode ? darkenHexColor(color, 60) : color;
+                return node.nodeIsFoundationNode ? darkenHexColor(color, 60) : color
             },
             onColorModeChange(event) {
                 if (event.target.value === this.colorMode) return
@@ -269,15 +269,16 @@ function darkenHexColor(hexColor, magnitude) {
                     requestWithToken(
                         `${monitorServerUrl}/report?timestamp=${G.lastUpdatedTimestamp}`
                     ),
-                    requestWithToken(
-                        `${monitorServerUrl}/list-foundation-nodes`
-                    ),
+                    requestWithToken(`${monitorServerUrl}/list-foundation-nodes`),
                 ])
                 const listOfFoundationNodes = results[1].data
-                const data =  results[0].data
+                const data = results[0].data
                 const activeNodesIds = Object.keys(data.nodes.active)
                 for (let i = 0; i < activeNodesIds.length; i++) {
-                    data.nodes.active[activeNodesIds[i]].nodeIsFoundationNode = listOfFoundationNodes.includes(data.nodes.active[activeNodesIds[i]].nodeIpInfo.externalIp)
+                    data.nodes.active[activeNodesIds[i]].nodeIsFoundationNode =
+                        listOfFoundationNodes.includes(
+                            data.nodes.active[activeNodesIds[i]].nodeIpInfo.externalIp
+                        )
                 }
                 return data
             },
@@ -334,7 +335,7 @@ function darkenHexColor(hexColor, magnitude) {
                     queueTime.push(node.txTimeInQueue)
                     const result = node.lastInSyncResult
                     this.networkStatus.counter = node.cycleCounter
-            
+
                     for (let radix of result?.radixes || []) {
                         const recentRuntimeSyncCycle = radix.recentRuntimeSyncCycle || -1
                         const uniqueKey = `${nodeId}-${radix.radix}`
@@ -343,7 +344,7 @@ function darkenHexColor(hexColor, magnitude) {
                         }
                     }
                     node.radixes = result?.radixes || []
-                    
+
                     this.nodeLoads.push({
                         id: nodeId,
                         ip: node.nodeIpInfo.externalIp,
@@ -586,16 +587,24 @@ function darkenHexColor(hexColor, magnitude) {
                     console.log(nodeId, node)
                 }
             },
-            getModeEmoji(networkMode){
+            getModeEmoji(networkMode) {
                 switch (networkMode) {
-                    case 'forming': return ' 🟡'
-                    case 'processing': return ' 🟢'
-                    case 'safety': return ' ⚠️'
-                    case 'recovery': return ' ♻️'
-                    case 'restart': return ' 🔄'
-                    case 'restore': return ' 🔵'
-                    case 'shutdown': return ' 🔴'
-                    default: return ''
+                    case 'forming':
+                        return ' 🟡'
+                    case 'processing':
+                        return ' 🟢'
+                    case 'safety':
+                        return ' ⚠️'
+                    case 'recovery':
+                        return ' ♻️'
+                    case 'restart':
+                        return ' 🔄'
+                    case 'restore':
+                        return ' 🔵'
+                    case 'shutdown':
+                        return ' 🔴'
+                    default:
+                        return ''
                 }
             },
 
@@ -833,7 +842,17 @@ function darkenHexColor(hexColor, magnitude) {
 
                 return {
                     drawNode: () => {
-                        this.drawCanvasNode({ ctx, x, y, width, height, style, isEoa, indicator, currentNode })
+                        this.drawCanvasNode({
+                            ctx,
+                            x,
+                            y,
+                            width,
+                            height,
+                            style,
+                            isEoa,
+                            indicator,
+                            currentNode,
+                        })
                     },
                     nodeDimensions: { width, height },
                 }
@@ -850,7 +869,8 @@ function darkenHexColor(hexColor, magnitude) {
                         if (CAndCEOnly && radix.inEdgeRange) continue
                         if (!radix.insync) {
                             const recentlyActive =
-                                currentCounter - node.cycleFinishedSyncing <= this.isRecentActiveCycles
+                                currentCounter - node.cycleFinishedSyncing <=
+                                this.isRecentActiveCycles
                             const hasRecentSync = radix.recentRuntimeSync
 
                             if (!recentlyActive && !hasRecentSync) {
@@ -865,7 +885,9 @@ function darkenHexColor(hexColor, magnitude) {
                         }
                     }
                 } else {
-                    console.warn(`Node ${node.id || 'unknown'} does not have a valid radixes property`)
+                    console.warn(
+                        `Node ${node.id || 'unknown'} does not have a valid radixes property`
+                    )
                 }
 
                 return {
@@ -881,28 +903,28 @@ function darkenHexColor(hexColor, magnitude) {
                 let summary = {
                     E: { count: 0, nodes: 0 },
                     CE: { count: 0, nodes: 0 },
-                    C: { count: 0, nodes: 0 }
-                };
-                
+                    C: { count: 0, nodes: 0 },
+                }
+
                 for (let nodeId in G.nodes.active) {
-                    let node = G.nodes.active[nodeId];
-                    let oos = this.isUnexpectedOOS(node, this.oosFilter === 'smart-c');
+                    let node = G.nodes.active[nodeId]
+                    let oos = this.isUnexpectedOOS(node, this.oosFilter === 'smart-c')
 
                     if (oos.E > 0) {
-                        summary.E.count += oos.E;
-                        summary.E.nodes++;
+                        summary.E.count += oos.E
+                        summary.E.nodes++
                     }
                     if (oos.CE > 0) {
-                        summary.CE.count += oos.CE;
-                        summary.CE.nodes++;
+                        summary.CE.count += oos.CE
+                        summary.CE.nodes++
                     }
                     if (oos.C > 0) {
-                        summary.C.count += oos.C;
-                        summary.C.nodes++;
+                        summary.C.count += oos.C
+                        summary.C.nodes++
                     }
                 }
-                
-                return summary;
+
+                return summary
             },
             // update when filter changes
             refreshNodeColors() {
@@ -917,12 +939,8 @@ function darkenHexColor(hexColor, magnitude) {
 
             async start() {
                 const results = await Promise.all([
-                    requestWithToken(
-                        `${monitorServerUrl}/report`
-                    ),
-                    requestWithToken(
-                        `${monitorServerUrl}/list-foundation-nodes`
-                    ),
+                    requestWithToken(`${monitorServerUrl}/report`),
+                    requestWithToken(`${monitorServerUrl}/list-foundation-nodes`),
                 ])
                 let res = results[0]
                 const listOfFoundationNodes = results[1].data
@@ -931,7 +949,10 @@ function darkenHexColor(hexColor, magnitude) {
                 const activeNodesIds = Object.keys(report.nodes.active)
                 for (let i = 0; i < activeNodesIds.length; i++) {
                     const nodeId = activeNodesIds[i]
-                    report.nodes.active[nodeId].nodeIsFoundationNode = listOfFoundationNodes.includes(report.nodes.active[nodeId].nodeIpInfo.externalIp)
+                    report.nodes.active[nodeId].nodeIsFoundationNode =
+                        listOfFoundationNodes.includes(
+                            report.nodes.active[nodeId].nodeIpInfo.externalIp
+                        )
                 }
                 this.filterOutCrashedNodes(report)
                 for (let nodeId in report.nodes.active) {
