@@ -7,14 +7,14 @@ new Vue({
   el: '#app',
   data: {
     ip: null,
-    port: null
+    port: null,
   },
   mounted: function () {
     // console.log('mounted')
     const urlParams = new URLSearchParams(window.location.search)
     let ip = urlParams.get('ip')
     if (ip === 'localhost' || ip === '127.0.0.1') {
-      ip = window.location.href.split('//')[1].split(":")[0]
+      ip = window.location.href.split('//')[1].split(':')[0]
     }
     console.log('ip', ip)
     this.ip = ip
@@ -32,6 +32,6 @@ new Vue({
     scrollToLastLine(slotId) {
       let textArea = document.getElementById(`output-${slotId}`)
       textArea.scrollTop = textArea.scrollHeight
-    }
-  }
+    },
+  },
 })

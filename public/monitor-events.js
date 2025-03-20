@@ -1,26 +1,26 @@
 const INTERVAL = 10_000
 
 const fetchChanges = async () => {
-    const countedEventsResponse = await requestWithToken('/api/counted-events')
-    const countedEvents = countedEventsResponse.data
+  const countedEventsResponse = await requestWithToken('/api/counted-events')
+  const countedEvents = countedEventsResponse.data
 
-    countedEvents.forEach((countedEvent) => {
-        const eventCategoryEl = createOrGetEventCategoryElement(countedEvent.eventCategory)
-        const eventNameEl = createOrGetEventNameElement(eventCategoryEl, countedEvent.eventName)
-        createOrGetEventCountElement(eventNameEl, countedEvent.eventCount)
-        const nodesListEl = createOrGetNodesList(eventNameEl)
-        const eventMessagesListEl = createOrGetEventMessagesList(eventNameEl)
+  countedEvents.forEach((countedEvent) => {
+    const eventCategoryEl = createOrGetEventCategoryElement(countedEvent.eventCategory)
+    const eventNameEl = createOrGetEventNameElement(eventCategoryEl, countedEvent.eventName)
+    createOrGetEventCountElement(eventNameEl, countedEvent.eventCount)
+    const nodesListEl = createOrGetNodesList(eventNameEl)
+    const eventMessagesListEl = createOrGetEventMessagesList(eventNameEl)
 
-        for (const nodeId in countedEvent.instanceData) {
-            const instanceData = countedEvent.instanceData[nodeId]
-            createOrGetInstanceDataElement(nodesListEl, nodeId, instanceData)
-        }
+    for (const nodeId in countedEvent.instanceData) {
+      const instanceData = countedEvent.instanceData[nodeId]
+      createOrGetInstanceDataElement(nodesListEl, nodeId, instanceData)
+    }
 
-        for (const eventMessage in countedEvent.eventMessages) {
-            const eventMessageCount = countedEvent.eventMessages[eventMessage]
-            createOrGetEventMessageElement(eventMessagesListEl, eventMessage, eventMessageCount)
-        }
-    })
+    for (const eventMessage in countedEvent.eventMessages) {
+      const eventMessageCount = countedEvent.eventMessages[eventMessage]
+      createOrGetEventMessageElement(eventMessagesListEl, eventMessage, eventMessageCount)
+    }
+  })
 }
 
 /**
@@ -37,8 +37,7 @@ const eventCategoryToHTMLId = (eventCategory) => `c-${eventCategory}`
  * @param {string} eventName
  * @returns
  */
-const eventNameToHTMLId = (eventCategory, eventName) =>
-    `${eventCategoryToHTMLId(eventCategory)}-n-${eventName}`
+const eventNameToHTMLId = (eventCategory, eventName) => `${eventCategoryToHTMLId(eventCategory)}-n-${eventName}`
 
 /**
  * Gets a shorter node ID for display purposes
@@ -53,13 +52,13 @@ const getTruncatedNodeId = (nodeId) => nodeId.substring(0, 10)
 const nodeIdToHTMLId = (nodeId) => `node-${nodeId}`
 
 const generateHash = function (num) {
-    const table = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f']
-    let hash = ''
-    for (let i = 0; i < num; i++) {
-        const randomIndex = Math.floor(Math.random() * table.length)
-        hash += table[randomIndex]
-    }
-    return hash
+  const table = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f']
+  let hash = ''
+  for (let i = 0; i < num; i++) {
+    const randomIndex = Math.floor(Math.random() * table.length)
+    hash += table[randomIndex]
+  }
+  return hash
 }
 
 /**
@@ -68,23 +67,22 @@ const generateHash = function (num) {
  * @returns
  */
 const createOrGetEventCategoryElement = (eventCategory) => {
-    const eventList = document.getElementById('event-list')
+  const eventList = document.getElementById('event-list')
 
-    const eventCategoryHTMLId = eventCategoryToHTMLId(eventCategory)
-    const eventCategoryExists = document.getElementById(eventCategoryHTMLId) !== null
-    const eventCategoryEl =
-        document.getElementById(eventCategoryHTMLId) ?? document.createElement('details')
+  const eventCategoryHTMLId = eventCategoryToHTMLId(eventCategory)
+  const eventCategoryExists = document.getElementById(eventCategoryHTMLId) !== null
+  const eventCategoryEl = document.getElementById(eventCategoryHTMLId) ?? document.createElement('details')
 
-    if (!eventCategoryExists) {
-        eventCategoryEl.id = eventCategoryHTMLId
-        eventCategoryEl.innerHTML = `<summary>${eventCategory}</summary>`
-        eventList.appendChild(eventCategoryEl)
+  if (!eventCategoryExists) {
+    eventCategoryEl.id = eventCategoryHTMLId
+    eventCategoryEl.innerHTML = `<summary>${eventCategory}</summary>`
+    eventList.appendChild(eventCategoryEl)
 
-        const eventNameList = document.createElement('ul')
-        eventCategoryEl.appendChild(eventNameList)
-    }
+    const eventNameList = document.createElement('ul')
+    eventCategoryEl.appendChild(eventNameList)
+  }
 
-    return eventCategoryEl
+  return eventCategoryEl
 }
 
 /**
@@ -94,23 +92,22 @@ const createOrGetEventCategoryElement = (eventCategory) => {
  * @param {string} eventName
  */
 const createOrGetEventNameElement = (eventCategoryEl, eventName) => {
-    const eventNameHTMLId = eventNameToHTMLId(eventCategoryEl.id, eventName)
-    const eventNameExists = eventCategoryEl.querySelector(`#${eventNameHTMLId}`) !== null
-    const eventNameEl =
-        eventCategoryEl.querySelector(`#${eventNameHTMLId}`) ?? document.createElement('details')
+  const eventNameHTMLId = eventNameToHTMLId(eventCategoryEl.id, eventName)
+  const eventNameExists = eventCategoryEl.querySelector(`#${eventNameHTMLId}`) !== null
+  const eventNameEl = eventCategoryEl.querySelector(`#${eventNameHTMLId}`) ?? document.createElement('details')
 
-    const eventNamesList = eventCategoryEl.querySelector('ul')
+  const eventNamesList = eventCategoryEl.querySelector('ul')
 
-    if (!eventNameExists) {
-        eventNameEl.id = eventNameHTMLId
-        eventNameEl.innerHTML = `<summary>${eventName}</summary>`
-        eventNamesList.appendChild(eventNameEl)
+  if (!eventNameExists) {
+    eventNameEl.id = eventNameHTMLId
+    eventNameEl.innerHTML = `<summary>${eventName}</summary>`
+    eventNamesList.appendChild(eventNameEl)
 
-        const eventsList = document.createElement('ul')
-        eventNameEl.appendChild(eventsList)
-    }
+    const eventsList = document.createElement('ul')
+    eventNameEl.appendChild(eventsList)
+  }
 
-    return eventNameEl.querySelector('ul')
+  return eventNameEl.querySelector('ul')
 }
 
 /**
@@ -119,17 +116,16 @@ const createOrGetEventNameElement = (eventCategoryEl, eventName) => {
  * @param {number} eventCount
  */
 const createOrGetEventCountElement = (eventNameEl, eventCount) => {
-    const eventCountHTMLId = 'event-count'
-    const eventCountExists = eventNameEl.querySelector(`#${eventCountHTMLId}`) !== null
-    const eventCountEl =
-        eventNameEl.querySelector(`#${eventCountHTMLId}`) ?? document.createElement('div')
+  const eventCountHTMLId = 'event-count'
+  const eventCountExists = eventNameEl.querySelector(`#${eventCountHTMLId}`) !== null
+  const eventCountEl = eventNameEl.querySelector(`#${eventCountHTMLId}`) ?? document.createElement('div')
 
-    eventCountEl.id = eventCountHTMLId
-    eventCountEl.textContent = `Event count: ${eventCount}`
+  eventCountEl.id = eventCountHTMLId
+  eventCountEl.textContent = `Event count: ${eventCount}`
 
-    if (!eventCountExists) {
-        eventNameEl.appendChild(eventCountEl)
-    }
+  if (!eventCountExists) {
+    eventNameEl.appendChild(eventCountEl)
+  }
 }
 
 /**
@@ -138,22 +134,21 @@ const createOrGetEventCountElement = (eventNameEl, eventCount) => {
  * @returns
  */
 const createOrGetNodesList = (eventNameEl) => {
-    const eventNodesListHTMLId = 'nodes-list'
-    const eventNodesListExists = eventNameEl.querySelector(`#${eventNodesListHTMLId}`) !== null
-    const eventNodesListEl =
-        eventNameEl.querySelector(`#${eventNodesListHTMLId}`) ?? document.createElement('details')
+  const eventNodesListHTMLId = 'nodes-list'
+  const eventNodesListExists = eventNameEl.querySelector(`#${eventNodesListHTMLId}`) !== null
+  const eventNodesListEl = eventNameEl.querySelector(`#${eventNodesListHTMLId}`) ?? document.createElement('details')
 
-    if (!eventNodesListExists) {
-        eventNodesListEl.innerHTML = `<summary>Nodes</summary>`
-        eventNodesListEl.id = eventNodesListHTMLId
+  if (!eventNodesListExists) {
+    eventNodesListEl.innerHTML = `<summary>Nodes</summary>`
+    eventNodesListEl.id = eventNodesListHTMLId
 
-        const nodesList = document.createElement('ul')
-        eventNodesListEl.appendChild(nodesList)
+    const nodesList = document.createElement('ul')
+    eventNodesListEl.appendChild(nodesList)
 
-        eventNameEl.appendChild(eventNodesListEl)
-    }
+    eventNameEl.appendChild(eventNodesListEl)
+  }
 
-    return eventNodesListEl.querySelector('ul')
+  return eventNodesListEl.querySelector('ul')
 }
 
 /**
@@ -163,16 +158,16 @@ const createOrGetNodesList = (eventNameEl) => {
  * @param {{eventCount: number, externalIp: string, externalPort: number}} instanceData
  */
 const createOrGetInstanceDataElement = (nodesListEl, nodeId, instanceData) => {
-    const { eventCount, externalIp, externalPort } = instanceData
+  const { eventCount, externalIp, externalPort } = instanceData
 
-    const truncatedNodeId = getTruncatedNodeId(nodeId)
-    const nodeHTMLId = nodeIdToHTMLId(truncatedNodeId)
-    const nodeExists = nodesListEl.querySelector(`#${nodeHTMLId}`) !== null
-    const nodeEl = nodesListEl.querySelector(`#${nodeHTMLId}`) ?? document.createElement('div')
+  const truncatedNodeId = getTruncatedNodeId(nodeId)
+  const nodeHTMLId = nodeIdToHTMLId(truncatedNodeId)
+  const nodeExists = nodesListEl.querySelector(`#${nodeHTMLId}`) !== null
+  const nodeEl = nodesListEl.querySelector(`#${nodeHTMLId}`) ?? document.createElement('div')
 
-    nodeEl.id = nodeHTMLId
-    const href = `/log?ip=${externalIp}&port=${externalPort}`
-    nodeEl.innerHTML = `
+  nodeEl.id = nodeHTMLId
+  const href = `/log?ip=${externalIp}&port=${externalPort}`
+  nodeEl.innerHTML = `
         Count for 
         <a href="${href}" target="_blank" rel="noopener noreferrer">
             ${truncatedNodeId}
@@ -180,11 +175,11 @@ const createOrGetInstanceDataElement = (nodesListEl, nodeId, instanceData) => {
         ${eventCount}
     `
 
-    if (!nodeExists) {
-        nodesListEl.appendChild(nodeEl)
+  if (!nodeExists) {
+    nodesListEl.appendChild(nodeEl)
 
-        nodeEl.classList.add('node')
-    }
+    nodeEl.classList.add('node')
+  }
 }
 
 /**
@@ -193,24 +188,22 @@ const createOrGetInstanceDataElement = (nodesListEl, nodeId, instanceData) => {
  * @returns
  */
 const createOrGetEventMessagesList = (eventNameEl) => {
-    const eventMessagesListHTMLId = 'event-messages-list'
-    const eventMessagesListExists =
-        eventNameEl.querySelector(`#${eventMessagesListHTMLId}`) !== null
-    const eventMessagesListEl =
-        eventNameEl.querySelector(`#${eventMessagesListHTMLId}`) ??
-        document.createElement('details')
+  const eventMessagesListHTMLId = 'event-messages-list'
+  const eventMessagesListExists = eventNameEl.querySelector(`#${eventMessagesListHTMLId}`) !== null
+  const eventMessagesListEl =
+    eventNameEl.querySelector(`#${eventMessagesListHTMLId}`) ?? document.createElement('details')
 
-    if (!eventMessagesListExists) {
-        eventMessagesListEl.innerHTML = `<summary>Event Messages</summary>`
-        eventMessagesListEl.id = eventMessagesListHTMLId
+  if (!eventMessagesListExists) {
+    eventMessagesListEl.innerHTML = `<summary>Event Messages</summary>`
+    eventMessagesListEl.id = eventMessagesListHTMLId
 
-        const messagesList = document.createElement('ul')
-        eventMessagesListEl.appendChild(messagesList)
+    const messagesList = document.createElement('ul')
+    eventMessagesListEl.appendChild(messagesList)
 
-        eventNameEl.appendChild(eventMessagesListEl)
-    }
+    eventNameEl.appendChild(eventMessagesListEl)
+  }
 
-    return eventMessagesListEl.querySelector('ul')
+  return eventMessagesListEl.querySelector('ul')
 }
 
 /**
@@ -221,17 +214,16 @@ const createOrGetEventMessagesList = (eventNameEl) => {
  * @param {number} eventMessageCount
  */
 const createOrGetEventMessageElement = (eventMessagesList, eventMessage, eventMessageCount) => {
-    const eventMessageHTMLId = 'message' + generateHash(10)
-    const eventMessageExists = eventMessagesList.querySelector(`#${eventMessageHTMLId}`) !== null
-    const eventMessageEl =
-        eventMessagesList.querySelector(`#${eventMessageHTMLId}`) ?? document.createElement('div')
+  const eventMessageHTMLId = 'message' + generateHash(10)
+  const eventMessageExists = eventMessagesList.querySelector(`#${eventMessageHTMLId}`) !== null
+  const eventMessageEl = eventMessagesList.querySelector(`#${eventMessageHTMLId}`) ?? document.createElement('div')
 
-    eventMessageEl.id = eventMessageHTMLId
-    eventMessageEl.textContent = `Message: "${eventMessage}". Count: ${eventMessageCount}`
+  eventMessageEl.id = eventMessageHTMLId
+  eventMessageEl.textContent = `Message: "${eventMessage}". Count: ${eventMessageCount}`
 
-    if (!eventMessageExists) {
-        eventMessagesList.appendChild(eventMessageEl)
-    }
+  if (!eventMessageExists) {
+    eventMessagesList.appendChild(eventMessageEl)
+  }
 }
 
 /**
@@ -239,21 +231,21 @@ const createOrGetEventMessageElement = (eventMessagesList, eventMessage, eventMe
  * @param {Event} input
  */
 const filterByNodesId = (input) => {
-    const searchString = input.target.value
-    const truncatedSearchString = getTruncatedNodeId(searchString)
+  const searchString = input.target.value
+  const truncatedSearchString = getTruncatedNodeId(searchString)
 
-    const allNodes = document.querySelectorAll('.node')
-    allNodes.forEach((node) => {
-        // Remove "node-" prefix
-        const nodeId = node.id.substring(5)
-        node.classList.remove('hidden')
+  const allNodes = document.querySelectorAll('.node')
+  allNodes.forEach((node) => {
+    // Remove "node-" prefix
+    const nodeId = node.id.substring(5)
+    node.classList.remove('hidden')
 
-        const nodeContainsSearchString = nodeId.startsWith(truncatedSearchString)
+    const nodeContainsSearchString = nodeId.startsWith(truncatedSearchString)
 
-        if (!nodeContainsSearchString) {
-            node.classList.add('hidden')
-        }
-    })
+    if (!nodeContainsSearchString) {
+      node.classList.add('hidden')
+    }
+  })
 }
 
 fetchChanges()
