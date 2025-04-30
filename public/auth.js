@@ -1,3 +1,4 @@
+/* eslint-disable */
 var request = axios.default
 const url = new URL(window.location.href)
 const protocol = window.location.protocol
@@ -5,7 +6,8 @@ const protocol = window.location.protocol
 const server = `${protocol}//` + window.location.host
 
 console.log('server', server)
-var monitorServerUrl = server.slice(-1) === '/' ? server + 'api' : server + '/api'
+// allow override via injected MONITOR_API_URL
+var monitorServerUrl = window.MONITOR_API_URL || (server.slice(-1) === '/' ? server + 'api' : server + '/api')
 // var monitorServerUrl = `http://54.93.204.116:3000/api`
 
 console.log('monitor server url', monitorServerUrl)
