@@ -181,11 +181,11 @@
                                 <td>{{ (node.refutePercentage * 100).toFixed(1) }}%</td>
                                 <td>
                                     <div style="display: flex; align-items: center; gap: 5px;">
-                                        <span style="font-size: 0.8em; color: #666;">{{ node.oldestCycle || '?' }}</span>
+                                        <span style="font-size: 0.8em; color: #666;">{{ node.cycleRefuteHistory.length > 0 ? node.newestCycle - node.cycleRefuteHistory.length + 1 : '?' }}</span>
                                         <div style="display: flex;">
                                             <span v-for="(refuted, index) in node.cycleRefuteHistory" :key="index"
                                                   :class="['cycle-box', refuted ? 'cycle-refuted' : 'cycle-not-refuted']"
-                                                  :title="'Cycle ' + (node.oldestCycle ? node.oldestCycle + index : index) + ': ' + (refuted ? 'Refuted' : 'Not Refuted')">
+                                                  :title="'Cycle ' + (node.cycleRefuteHistory.length > 0 ? node.newestCycle - node.cycleRefuteHistory.length + 1 + index : index) + ': ' + (refuted ? 'Refuted' : 'Not Refuted')">
                                             </span>
                                         </div>
                                         <span style="font-size: 0.8em; color: #666;">{{ node.newestCycle || '?' }}</span>
