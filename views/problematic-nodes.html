@@ -129,7 +129,7 @@
     </style>
 </head>
 <body>
-    <% include shared/navigation.html %>
+    <%- include('shared/navigation.html') %>
     <div class="center-container">
         <div id="app">
             <div class="stats-container">
@@ -163,7 +163,7 @@
                                 <th @click="sortTable('totalRefutes')">Total Refutes</th>
                                 <th @click="sortTable('maxConsecutiveRefutes')">Max Consecutive</th>
                                 <th @click="sortTable('refutePercentage')">Refute %</th>
-                                <th>Cycle History</th>
+                                <th>Cycle History ({{ cycleHistoryLength }} cycles)</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -173,27 +173,35 @@
                                     'warning-row': !node.isProblematic && node.totalRefutes > 0,
                                     'healthy-row': !node.isProblematic && node.totalRefutes === 0
                                 }">
-                                <td>{{ node.nodeId.substring(0, 8) }}...</td>
+                                <td style="font-family: monospace; font-size: 0.85em;">{{ node.nodeId }}</td>
                                 <td>{{ node.ip }}:{{ node.port }}</td>
                                 <td>{{ node.isProblematic ? 'Yes' : 'No' }}</td>
                                 <td>{{ node.totalRefutes }}</td>
                                 <td>{{ node.maxConsecutiveRefutes }}</td>
                                 <td>{{ (node.refutePercentage * 100).toFixed(1) }}%</td>
                                 <td>
-                                    <span v-for="(refuted, index) in node.cycleRefuteHistory" :key="index"
-                                          :class="['cycle-box', refuted ? 'cycle-refuted' : 'cycle-not-refuted']"
-                                          :title="'Cycle ' + index + ': ' + (refuted ? 'Refuted' : 'Not Refuted')">
-                                    </span>
+                                    <div style="display: flex; align-items: center; gap: 5px;">
+                                        <span style="font-size: 0.8em; color: #666;">{{ node.oldestCycle || '?' }}</span>
+                                        <div style="display: flex;">
+                                            <span v-for="(refuted, index) in node.cycleRefuteHistory" :key="index"
+                                                  :class="['cycle-box', refuted ? 'cycle-refuted' : 'cycle-not-refuted']"
+                                                  :title="'Cycle ' + (node.oldestCycle ? node.oldestCycle + index : index) + ': ' + (refuted ? 'Refuted' : 'Not Refuted')">
+                                            </span>
+                                        </div>
+                                        <span style="font-size: 0.8em; color: #666;">{{ node.newestCycle || '?' }}</span>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
+                    <div v-if="problematicNodes.length === 0" style="padding: 20px; text-align: center; color: #666;">
+                        No problematic node data available yet. Waiting for validators to report...
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <script type="text/javascript">const monitorServerUrl = '<%= MONITOR_API_URL %>';</script>
-    <script src="auth.js"></script>
+    <script src="auth.js" type="text/javascript"></script>
     <script src="problematic-nodes.js"></script>
 </body>
 </html>

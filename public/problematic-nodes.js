@@ -45,6 +45,13 @@
       healthyCount() {
         return this.problematicNodes.filter((n) => !n.isProblematic && n.totalRefutes === 0).length
       },
+      cycleHistoryLength() {
+        // Get the length from the first node's cycle history, or default to 0
+        if (this.problematicNodes.length > 0 && this.problematicNodes[0].cycleRefuteHistory) {
+          return this.problematicNodes[0].cycleRefuteHistory.length
+        }
+        return 0
+      },
     },
     methods: {
       sortTable(key) {
