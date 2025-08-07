@@ -139,15 +139,15 @@
                         <div class="stat-label">Total Nodes</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-value" style="color: #ef4444;">{{ problematicCount }}</div>
+                        <div class="stat-value" style="color: #ef4444;">🔴 {{ problematicCount }}</div>
                         <div class="stat-label">Problematic</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-value" style="color: #f59e0b;">{{ warningCount }}</div>
+                        <div class="stat-value" style="color: #f59e0b;">⚠️ {{ warningCount }}</div>
                         <div class="stat-label">Warning</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-value" style="color: #10b981;">{{ healthyCount }}</div>
+                        <div class="stat-value" style="color: #10b981;">✅ {{ healthyCount }}</div>
                         <div class="stat-label">Healthy</div>
                     </div>
                 </div>
@@ -159,7 +159,7 @@
                             <tr>
                                 <th @click="sortTable('nodeId')">Node ID</th>
                                 <th @click="sortTable('ip')">IP:Port</th>
-                                <th @click="sortTable('isProblematic')">Is Problematic</th>
+                                <th @click="sortTable('isProblematic')">Status</th>
                                 <th @click="sortTable('totalRefutes')">Total Refutes</th>
                                 <th @click="sortTable('maxConsecutiveRefutes')">Max Consecutive</th>
                                 <th @click="sortTable('refutePercentage')">Refute %</th>
@@ -175,7 +175,7 @@
                                 }">
                                 <td style="font-family: monospace; font-size: 0.85em;">{{ node.nodeId }}</td>
                                 <td>{{ node.ip }}:{{ node.port }}</td>
-                                <td>{{ node.isProblematic ? 'Yes' : 'No' }}</td>
+                                <td>{{ getStatusDisplay(node) }}</td>
                                 <td>{{ node.totalRefutes }}</td>
                                 <td>{{ node.maxConsecutiveRefutes }}</td>
                                 <td>{{ (node.refutePercentage * 100).toFixed(1) }}%</td>

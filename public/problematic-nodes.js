@@ -54,6 +54,15 @@
       },
     },
     methods: {
+      getStatusDisplay(node) {
+        if (node.isProblematic) {
+          return '🔴 Problematic'
+        } else if (node.totalRefutes > 0) {
+          return '⚠️ Warning'
+        } else {
+          return '✅ Healthy'
+        }
+      },
       sortTable(key) {
         if (this.sortKey === key) {
           this.sortAsc = !this.sortAsc
