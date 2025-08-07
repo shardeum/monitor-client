@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Problematic Nodes</title>
+    <script src="axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet" />
+    <style>
+        body {
+            margin: 0;
+            background: #e0eafc;
+            background: -webkit-linear-gradient(to right, #cfdef3, #e0eafc);
+            background: linear-gradient(to right, #cfdef3, #e0eafc);
+            min-height: 100vh;
+        }
+
+        .center-container {
+            width: 100%;
+        }
+
+        .problematic-nodes-container {
+            margin: 10px auto;
+            max-height: 90vh;
+            overflow: auto;
+            font-family: sans-serif;
+            font-size: small;
+            font-weight: 300;
+            text-align: left;
+            background-color: #f3f4f6;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        .problematic-nodes-container table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        .problematic-nodes-container th,
+        .problematic-nodes-container td {
+            text-align: left;
+            border: none;
+            padding: 8px;
+        }
+
+        .problematic-nodes-container th {
+            background-color: #f3f4f6;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            cursor: pointer;
+        }
+
+        .problematic-nodes-container th:hover {
+            background-color: #e5e7eb;
+        }
+
+        .tbody-wrapper {
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .problematic-nodes-container tbody tr:hover {
+            background-color: #e5e7eb;
+        }
+
+        .problematic-row {
+            background-color: #fee2e2 !important;
+        }
+
+        .warning-row {
+            background-color: #fef3c7 !important;
+        }
+
+        .healthy-row {
+            background-color: #d1fae5 !important;
+        }
+
+        .cycle-box {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            margin: 1px;
+            border: 1px solid #ccc;
+        }
+
+        .cycle-refuted {
+            background-color: #ef4444;
+        }
+
+        .cycle-not-refuted {
+            background-color: #10b981;
+        }
+
+        .stats-container {
+            padding: 1rem;
+            background-color: white;
+            margin-bottom: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1f2937;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+    <% include shared/navigation.html %>
+    <div class="center-container">
+        <div id="app">
+            <div class="stats-container">
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value">{{ totalNodes }}</div>
+                        <div class="stat-label">Total Nodes</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" style="color: #ef4444;">{{ problematicCount }}</div>
+                        <div class="stat-label">Problematic</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" style="color: #f59e0b;">{{ warningCount }}</div>
+                        <div class="stat-label">Warning</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" style="color: #10b981;">{{ healthyCount }}</div>
+                        <div class="stat-label">Healthy</div>
+                    </div>
+                </div>
+            </div>
+            <div class="problematic-nodes-container">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th @click="sortTable('nodeId')">Node ID</th>
+                                <th @click="sortTable('ip')">IP:Port</th>
+                                <th @click="sortTable('isProblematic')">Is Problematic</th>
+                                <th @click="sortTable('totalRefutes')">Total Refutes</th>
+                                <th @click="sortTable('maxConsecutiveRefutes')">Max Consecutive</th>
+                                <th @click="sortTable('refutePercentage')">Refute %</th>
+                                <th>Cycle History</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="node in sortedNodes" :key="node.nodeId" 
+                                :class="{
+                                    'problematic-row': node.isProblematic,
+                                    'warning-row': !node.isProblematic && node.totalRefutes > 0,
+                                    'healthy-row': !node.isProblematic && node.totalRefutes === 0
+                                }">
+                                <td>{{ node.nodeId.substring(0, 8) }}...</td>
+                                <td>{{ node.ip }}:{{ node.port }}</td>
+                                <td>{{ node.isProblematic ? 'Yes' : 'No' }}</td>
+                                <td>{{ node.totalRefutes }}</td>
+                                <td>{{ node.maxConsecutiveRefutes }}</td>
+                                <td>{{ (node.refutePercentage * 100).toFixed(1) }}%</td>
+                                <td>
+                                    <span v-for="(refuted, index) in node.cycleRefuteHistory" :key="index"
+                                          :class="['cycle-box', refuted ? 'cycle-refuted' : 'cycle-not-refuted']"
+                                          :title="'Cycle ' + index + ': ' + (refuted ? 'Refuted' : 'Not Refuted')">
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">const monitorServerUrl = '<%= MONITOR_API_URL %>';</script>
+    <script src="auth.js"></script>
+    <script src="problematic-nodes.js"></script>
+</body>
+</html>
