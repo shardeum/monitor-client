@@ -58,12 +58,13 @@
           requestWithToken(`${G.monitorServerUrl}/report?timestamp=${G.lastUpdatedTimestamp}`),
           requestWithToken(`${G.monitorServerUrl}/list-foundation-nodes`),
         ])
-        const listOfFoundationNodes = results[1].data
+        const listOfFoundationNodes = results[1].data || results[1]
+        const foundationNodeIPs = listOfFoundationNodes.map(node => node.ip)
         const data = results[0].data
         const activeNodesIds = Object.keys(data.nodes.active)
         for (let i = 0; i < activeNodesIds.length; i++) {
           const nodeId = activeNodesIds[i]
-          data.nodes.active[nodeId].nodeIsFoundationNode = listOfFoundationNodes.includes(
+          data.nodes.active[nodeId].nodeIsFoundationNode = foundationNodeIPs.includes(
             data.nodes.active[nodeId].nodeIpInfo.externalIp
           )
         }
