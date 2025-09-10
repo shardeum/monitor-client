@@ -198,7 +198,7 @@
             <div class="stats-bar">
                 <div class="stat-item">
                     <div class="stat-value">{{ nodeLoads.length }}</div>
-                    <div class="stat-label">Total Nodes</div>
+                    <div class="stat-label">Total Active Nodes</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-value">{{ foundationNodesCount }}</div>
@@ -207,10 +207,6 @@
                 <div class="stat-item">
                     <div class="stat-value">{{ averageLoad }}</div>
                     <div class="stat-label">Avg Load</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value" :class="isLoading ? 'loading-spinner' : ''">{{ isLoading ? '' : '●' }}</div>
-                    <div class="stat-label">Status</div>
                 </div>
             </div>
         <div class="table-wrapper">

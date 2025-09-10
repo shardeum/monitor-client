@@ -562,7 +562,7 @@ const NetworkMonitor = function (config) {
 
   const updateTables = function () {
     const totalStandby = report.nodes.standby === undefined ? 0 : Object.keys(report.nodes.standby).length
-    const totalJoining = Object.keys(G.joining).length - totalStandby
+    const totalJoining = report.nodes.joining === undefined ? 0 : Object.keys(report.nodes.joining).length
     const totalSyncing = Object.keys(G.syncing).length
     const totalActive = Object.keys(G.active).length
     const total = totalJoining + totalSyncing + totalActive + totalStandby
