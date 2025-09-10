@@ -11,6 +11,8 @@
         nodeLoads: [],
         sortKey: 'ip',
         sortAsc: true,
+        isLoading: false,
+        foundationNodes: [],
       }
     },
     computed: {
@@ -28,6 +30,18 @@
           if (valueA > valueB) return 1 * modifier
           return 0
         })
+      },
+      foundationNodesCount() {
+        return this.nodeLoads.filter(node => node.nodeIsFoundationNode).length
+      },
+      averageLoad() {
+        if (this.nodeLoads.length === 0) return '0.000'
+        const total = this.nodeLoads.reduce((sum, node) => {
+          const internal = parseFloat(node.loadInternal) || 0
+          const external = parseFloat(node.loadExternal) || 0
+          return sum + internal + external
+        }, 0)
+        return (total / (this.nodeLoads.length * 2)).toFixed(3)
       },
     },
     methods: {
@@ -63,16 +77,16 @@
             id: nodeId,
             ip: node.nodeIpInfo.externalIp,
             port: node.nodeIpInfo.externalPort,
-            loadInternal: node.currentLoad.nodeLoad.internal.toFixed(3),
-            loadExternal: node.currentLoad.nodeLoad.external.toFixed(3),
+            loadInternal: node.currentLoad?.nodeLoad?.internal ? node.currentLoad.nodeLoad.internal.toFixed(3) : '0.000',
+            loadExternal: node.currentLoad?.nodeLoad?.external ? node.currentLoad.nodeLoad.external.toFixed(3) : '0.000',
             queueLengthAll: node.queueLengthAll || 0,
             queueLength: node.queueLength || 0,
             bucket15: node.queueLengthBuckets?.c15 || 0,
             bucket60: node.queueLengthBuckets?.c60 || 0,
             bucket120: node.queueLengthBuckets?.c120 || 0,
             bucket600: node.queueLengthBuckets?.c600 || 0,
-            avgQueueTime: node.txTimeInQueue.toFixed(3),
-            maxQueueTime: node.maxTxTimeInQueue.toFixed(3),
+            avgQueueTime: node.txTimeInQueue ? node.txTimeInQueue.toFixed(3) : '0.000',
+            maxQueueTime: node.maxTxTimeInQueue ? node.maxTxTimeInQueue.toFixed(3) : '0.000',
             memoryRss: node.memory?.rss || 0,
             memoryHeapTotal: node.memory?.heapTotal || 0,
             memoryHeapUsed: node.memory?.heapUsed || 0,
