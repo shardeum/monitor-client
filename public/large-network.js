@@ -521,6 +521,13 @@ function darkenHexColor(hexColor, magnitude) {
             let updatedVisNode = this.getUpdatedVisNode(nodeId, node)
             updatedNodesMap[nodeId] = updatedVisNode
           }
+
+          // Update joining nodes
+          G.nodes.joining = changes.nodes.joining || {}
+
+          // Update standby nodes  
+          G.nodes.standby = changes.nodes.standby || {}
+          
           // draw new active + synicng nodes
           console.log('drawing new active and syncing nodes')
           newNodes = Object.values(newNodesMap)
