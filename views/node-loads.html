@@ -91,9 +91,13 @@
             text-align: left;
         }
 
-        .foundation-node {
-            background-color: #1ca7dc;
-            color: white;
+        .foundation-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: #7c3aed;
+            margin-right: 6px;
+            vertical-align: middle;
         }
 
 
@@ -129,7 +133,7 @@
         NODE LOADS (Memory is in MB) | Total Nodes: {{ nodeLoads.length }} | Foundation Nodes: {{ foundationNodesCount }} | Average Load: {{ averageLoad }}
     </div>
     <div style="padding: 5px 10px; background-color: #f9fafb; font-size: 12px; color: #6b7280;">
-        <span style="background-color: #1ca7dc; color: white; padding: 2px 6px; border-radius: 3px; margin-right: 5px;">■</span>
+        <span style="display: inline-block; width: 8px; height: 8px; background-color: #7c3aed; margin-right: 6px; vertical-align: middle;"></span>
         Foundation Nodes
     </div>
         <div class="table-wrapper">
@@ -159,7 +163,9 @@
                 </thead>
                 <tbody class="tbody-wrapper">
                     <tr v-for="node in sortedNodes" :key="node.id" :class="node.nodeIsFoundationNode ? 'foundation-node' : ''">
-                        <td>{{ node.ip }}</td>
+                        <td>
+                            <span v-if="node.nodeIsFoundationNode" class="foundation-indicator"></span>{{ node.ip }}
+                        </td>
                         <td>{{ node.port }}</td>
                         <td>{{ node.loadInternal }}</td>
                         <td>{{ node.loadExternal }}</td>
